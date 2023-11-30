@@ -12,13 +12,6 @@ class GestorPreguntasRespuestas(tk.Frame):
         # Crear la base de datos y la conexión
         self.conexion = self._crear_base_datos()
 
-        # Inicializar lista de respuestas temporales
-        self.respuestas_temporales = []
-
-        # Crear las variables de control
-        self.var_correcta = BooleanVar()
-        self.var_correcta.set(False)
-
         # Establecer las dimensiones de la ventana
         self.master.geometry("1000x500")
 
@@ -106,9 +99,9 @@ class GestorPreguntasRespuestas(tk.Frame):
             self.lista_preguntas.insert(END, f"{pregunta[0]}. {pregunta[1]}")
 
     def _mostrar_respuestas_seleccionadas(self, event):
-        seleccion = self.lista_preguntas.curselection()
-        if seleccion:
-            pregunta_id = int(self.lista_preguntas.get(seleccion)[0].split('.')[0])
+        seleccion_pregunta = self.lista_preguntas.curselection()
+        if seleccion_pregunta:
+            pregunta_id = int(self.lista_preguntas.get(seleccion_pregunta)[0].split('.')[0])
             cursor = self.conexion.cursor()
 
             cursor.execute("SELECT * FROM respuestas WHERE pregunta_id=?", (pregunta_id,))
@@ -119,16 +112,29 @@ class GestorPreguntasRespuestas(tk.Frame):
                 self.lista_respuestas.insert(END, f"{respuesta[0]}. {respuesta[2]} (Correcta: {respuesta[3]})")
 
     def _agregar_respuesta(self):
-        respuesta_texto = self.barra_busqueda_respuestas.get()
-        correcta = self.var_correcta.get()
+        seleccion_pregunta = self.lista_preguntas.curselection()
+        if seleccion_pregunta:
+            pregunta_id = int(self.lista_preguntas.get(seleccion_pregunta)[0].split('.')[0])
+            respuesta_texto = self.barra_busqueda_respuestas.get()
+            correcta = 0  # Cambiar a 1 si la respuesta es correcta, según tu lógica.
 
-        if respuesta_texto:
-            self.respuestas_temporales.append((respuesta_texto, correcta))
-            self.lista_respuestas.insert(END, f"{len(self.respuestas_temporales)}. {respuesta_texto} (Correcta: {correcta})")
-            self.barra_busqueda_respuestas.delete(0, 'end')
-            self.var_correcta.set(False)
+            if respuesta_texto:
+                cursor = self.conexion.cursor()
+
+                cursor.execute("""
+                    INSERT INTO respuestas (pregunta_id, respuesta, correcta)
+                    VALUES (?, ?, ?)
+                """, (pregunta_id, respuesta_texto, correcta))
+
+                self.conexion.commit()
+
+                # Actualizar la lista de respuestas en la interfaz
+                self._mostrar_respuestas_seleccionadas(None)
+                self.barra_busqueda_respuestas.delete(0, 'end')
+            else:
+                messagebox.showwarning("Advertencia", "Ingrese texto en la respuesta.")
         else:
-            messagebox.showwarning("Advertencia", "Ingrese texto en la respuesta.")
+            messagebox.showwarning("Advertencia", "Seleccione una pregunta antes de agregar una respuesta.")
 
     def _insertar_pregunta(self, pregunta_texto):
         cursor = self.conexion.cursor()
@@ -143,23 +149,10 @@ class GestorPreguntasRespuestas(tk.Frame):
 
         return pregunta_id
 
-    def _insertar_respuestas(self, pregunta_id):
-        cursor = self.conexion.cursor()
-
-        for respuesta, correcta in self.respuestas_temporales:
-            cursor.execute("""
-                INSERT INTO respuestas (pregunta_id, respuesta, correcta)
-                VALUES (?, ?, ?)
-            """, (pregunta_id, respuesta, correcta))
-
-        self.respuestas_temporales = []  # Limpiar respuestas temporales después de insertar
-
-        self.conexion.commit()
-
     def _borrar_pregunta_seleccionada(self):
-        seleccion = self.lista_preguntas.curselection()
-        if seleccion:
-            pregunta_id = int(self.lista_preguntas.get(seleccion)[0].split('.')[0])
+        seleccion_pregunta = self.lista_preguntas.curselection()
+        if seleccion_pregunta:
+            pregunta_id = int(self.lista_preguntas.get(seleccion_pregunta)[0].split('.')[0])
             cursor = self.conexion.cursor()
 
             # Borrar respuestas asociadas a la pregunta
@@ -175,9 +168,9 @@ class GestorPreguntasRespuestas(tk.Frame):
             self.lista_respuestas.delete(0, END)  # Limpiar la lista de respuestas en la interfaz
 
     def _borrar_respuesta_seleccionada(self):
-        seleccion = self.lista_respuestas.curselection()
-        if seleccion:
-            respuesta_id = int(self.lista_respuestas.get(seleccion)[0].split('.')[0])
+        seleccion_respuesta = self.lista_respuestas.curselection()
+        if seleccion_respuesta:
+            respuesta_id = int(self.lista_respuestas.get(seleccion_respuesta)[0].split('.')[0])
             cursor = self.conexion.cursor()
 
             # Borrar la respuesta
@@ -187,6 +180,7 @@ class GestorPreguntasRespuestas(tk.Frame):
 
             # Actualizar la lista de respuestas en la interfaz
             self._mostrar_respuestas_seleccionadas(None)
+            self.lista_respuestas.delete(self.lista_respuestas.curselection())  # Limpiar la lista de respuestas en la interfaz
 
     def _crear_interfaz_borrado(self):
         # Botón y función para borrar pregunta y respuestas
@@ -202,17 +196,15 @@ class GestorPreguntasRespuestas(tk.Frame):
     def _manejar_insercion(self):
         pregunta_texto = self.barra_busqueda_preguntas.get()
 
-        if pregunta_texto and self.respuestas_temporales:
+        if pregunta_texto:
             try:
                 pregunta_id = self._insertar_pregunta(pregunta_texto)
-                self._insertar_respuestas(pregunta_id)
-                messagebox.showinfo("Éxito", "Pregunta y respuestas insertadas correctamente.")
+                messagebox.showinfo("Éxito", "Pregunta insertada correctamente.")
                 self._mostrar_preguntas_y_respuestas()
-                self.lista_respuestas.delete(0, END)  # Limpiar la lista de respuestas en la interfaz
             except Exception as e:
-                messagebox.showerror("Error", f"No se pudo insertar la pregunta y respuestas: {e}")
+                messagebox.showerror("Error", f"No se pudo insertar la pregunta: {e}")
         else:
-            messagebox.showwarning("Advertencia", "Ingrese texto en la pregunta y al menos una respuesta.")
+            messagebox.showwarning("Advertencia", "Ingrese texto en la pregunta.")
 
     def ejecutar(self):
         self.master.mainloop()
