@@ -13,11 +13,11 @@ class Dashboard:
 
     def __init__(
         self,
-        width: int = 1280,
+        width: int = 2100,
         height: int = 720,
         appearance: str = "dark",
         theme_color: str = "green",
-        enrollment_id: str = "",
+        userName: str = "",
     ) -> None:
         """Constructor for Dashboard class for Asclepius.
 
@@ -32,18 +32,18 @@ class Dashboard:
 
         self.width = width
         self.height = height
-        self.user_id = enrollment_id
+        self.user_id = userName
 
         self.db_object = Database("Dashboard")
 
-        self.dataset = self.db_object.get_medicines()
-        self.col_headers = self.db_object.get_col_headings("medicines")
+        self.dataset = self.db_object.get_patients()
+        self.col_headers = self.db_object.get_col_headings("patients")
 
         ctk.set_appearance_mode(appearance)
         ctk.set_default_color_theme(theme_color)
 
         self.root = ctk.CTk()
-        self.root.title("Asclepius - Your Wellness Partner")
+        self.root.title("#### nutricionista")
         # self.root.resizable(False, False)
 
         self.title_logo = ctk.CTkImage(
@@ -51,7 +51,7 @@ class Dashboard:
         )
 
         self.order_list = []
-        self.column_widths = [80, 150, 450, 80, 100]
+        self.column_widths = [200, 200, 200, 80, 150, 80]
 
         # ------------------------ Fonts ------------------------#
         self.op_font = ctk.CTkFont(
@@ -72,7 +72,7 @@ class Dashboard:
         self.tagline_font = ctk.CTkFont(
             family="Rockwell", size=30, weight="normal"
         )
-        # ------------------------ Fonts ------------------------#
+        # ------------------------ Frames ------------------------#
 
         self.dashboard_frame = ctk.CTkFrame(self.root)
         self.mrec_frame = ctk.CTkFrame(self.root)
@@ -366,26 +366,8 @@ class Dashboard:
                 height=50,
             )
             col_cell.grid(
-                row=1, column=(pos + 1), pady=(10, 20), ipady=1, padx=5
+                row=1, column=(pos), pady=(10, 20), ipady=1, padx=6
             )
-
-            col = ctk.CTkEntry(
-                self.scrollable_frame,
-                width=self.column_widths[pos],
-                height=50,
-                font=self.text_font,
-            )
-
-            col.insert(ctk.END, text.capitalize())
-            col.configure(state=ctk.DISABLED)
-
-            col.grid(row=1, column=(pos + 1), pady=(10, 20), ipady=1, padx=5)
-
-        order_entry = ctk.CTkEntry(
-            self.scrollable_frame, height=50, font=self.text_font, width=80
-        )
-        order_entry.insert(ctk.END, "Order")
-        order_entry.grid(row=1, column=6, pady=(10, 20), ipady=1, padx=5)
 
         row = 2
         for i in self.dataset:
@@ -396,7 +378,7 @@ class Dashboard:
                     width=self.column_widths[j],
                     font=self.small_text_font,
                 )
-                entry.grid(row=row, column=(j + 1), padx=5)
+                entry.grid(row=row, column=(j), padx=5)
 
                 try:
                     entry.insert(ctk.END, i[j].capitalize())
@@ -404,27 +386,6 @@ class Dashboard:
                     entry.insert(ctk.END, i[j])
 
                 entry.configure(state=ctk.DISABLED)
-
-            order_checkbox = ctk.CTkCheckBox(
-                self.scrollable_frame,
-                text="",
-                variable=check_box_var,
-                onvalue=i[0],
-                offvalue=i[0],
-                command=lambda: self.order_check_button(check_box_var.get()),
-                width=70,
-            )
-
-            if i[-1].lower() == "no":
-                ctk.CTkLabel(
-                    self.scrollable_frame,
-                    text="  -",
-                    font=self.small_text_font,
-                    anchor=ctk.W,
-                    width=70,
-                ).grid(row=row, column=6, padx=5)
-            else:
-                order_checkbox.grid(row=row, column=6, padx=5)
 
             row += 1
 
@@ -497,23 +458,22 @@ class Dashboard:
 
         ctk.CTkLabel(
             self.dashboard_frame,
-            text="ASCLEPIUS: Your Wellness Partner",
+            text="########: Centro nutricionista",
             font=self.op_font,
         ).pack(padx=20, pady=20)
         ctk.CTkLabel(
             self.dashboard_frame,
-            text="""Hello. Welcome to Asclepius: Your Wellness Partner. Following are your details
-saved in our database.""",
+            text="""Hola!. Bienvenido a #####: Tu compañero nutricionista.""",
             font=self.text_font,
             anchor=ctk.CENTER,
         ).pack(anchor=ctk.CENTER, padx=20, pady=(20, 40))
 
         user_detail_labels = [
-            "ENROLLMENT NUMBER: ",
-            "FULL NAME: ",
-            "HOSTELLER/DAY SCHOLAR: ",
-            "ROOM No.: ",
-            "PHONE NUMBER: ",
+            "SK DE USUARIO: ",
+            "USERNAME: ",
+            "NOMBRE: ",
+            "APELLIDO: ",
+            "EMAIL: ",
         ]
         user_details = self.db_object.get_signupdetails(self.user_id)
 
@@ -521,10 +481,6 @@ saved in our database.""",
 
             if user_details[i] == "":
                 text_label = "Not Provided"
-            elif user_details[i] == 0:
-                text_label = "Day Scholar"
-            elif user_details[i] == 1:
-                text_label = "Hosteller"
             else:
                 try:
                     text_label = user_details[i].capitalize()
@@ -550,7 +506,7 @@ saved in our database.""",
         )
 
         place_order_button = ctk.CTkButton(
-            self.meds_frame, text="Place Order", command=self.place_order
+            self.meds_frame, text="Crear usuario", command=self.place_order
         )
         place_order_button.pack(padx=(0, 25), side="bottom", anchor=ctk.E)
 

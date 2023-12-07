@@ -53,7 +53,7 @@ class HomeScreen:
             root=self.tabview.tab("Login"),
             width=self.width,
             height=self.height,
-            appearance_mode="light",
+            appearance_mode="dark",
         )
         login_tab_frame = login_object.return_login_frame()
         login_tab_frame.pack(fill="both", expand=True, anchor=ctk.CENTER)
@@ -76,12 +76,12 @@ class HomeScreen:
 
             if login_object.login_completed:
                 print("User logged in successfully.")
-                self.__user_enrollment_id = login_object.get_credentials()[0]
+                self.__userName = login_object.get_credentials()[0]
                 break
 
             if signup_object.signup_completed:
                 print("User signed up successfully.")
-                self.__user_enrollment_id = signup_object.get_credentials()[1]
+                self.__userName = signup_object.get_credentials()[0]
                 break
 
         self.root.destroy()
@@ -89,7 +89,7 @@ class HomeScreen:
 
     def get_user_enrollment_id(self) -> str:
         """Return the enrollment id of the user."""
-        return self.__user_enrollment_id.upper()
+        return self.__userName
 
     def show_homescreen(self) -> None:
         """Show the homescreenwindow"""

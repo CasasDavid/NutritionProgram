@@ -11,7 +11,7 @@ class Login:
 
     def __init__(
         self,
-        appearance_mode: str = "light",
+        appearance_mode: str = "dark",
         color_theme: str = "green",
         width: int = 500,
         height: int = 500,
@@ -36,7 +36,7 @@ class Login:
             root, width=self.width, height=self.height
         )
 
-        self.__enrollment_id = ctk.StringVar()
+        self.__userName = ctk.StringVar()
         self.__password = ctk.StringVar()
 
         self.login_completed = False
@@ -70,13 +70,13 @@ class Login:
 
         self.enrollmentid = ctk.CTkLabel(
             self.login_frame,
-            text="Enrollment ID:",
+            text="User Name:",
             font=self.text_font,
             corner_radius=10,
         )
         self.enrollmentid_entry = ctk.CTkEntry(
             self.login_frame,
-            textvariable=self.__enrollment_id,
+            textvariable=self.__userName,
             width=220,
             font=self.text_font,
         )
@@ -123,7 +123,7 @@ class Login:
             True if the details are entered, else False.
         """
 
-        if self.__enrollment_id.get() == "" or self.__password.get() == "":
+        if self.__userName.get() == "" or self.__password.get() == "":
             ctk.CTkLabel(
                 self.login_frame,
                 text="Please enter all the details!",
@@ -131,15 +131,15 @@ class Login:
                 font=self.text_font,
             ).place(relx=0.51, rely=0.9, anchor=ctk.CENTER)
 
-        elif not re.match(
-            r"^(?=.*[A-Z])(?=.*[!@#$%^&*()]).*$", self.__enrollment_id.get()
-        ):
-            ctk.CTkLabel(
-                self.login_frame,
-                text="Please enter a valid enrollment ID!",
-                corner_radius=10,
-                font=self.text_font,
-            ).place(relx=0.51, rely=0.9, anchor=ctk.CENTER)
+        # elif not re.match(
+        #     r"^(?=.*[A-Z])", self.__password.get()
+        # ):
+        #     ctk.CTkLabel(
+        #         self.login_frame,
+        #         text="Please enter a valid password (Must contain uppercase letter)",
+        #         corner_radius=10,
+        #         font=self.text_font,
+        #     ).place(relx=0.51, rely=0.9, anchor=ctk.CENTER)
 
         elif not (self.db.login(self.get_credentials())):
             ctk.CTkLabel(
@@ -169,9 +169,9 @@ class Login:
         """Get the credentials entered by the user.
 
         Returns:
-            tuple: The enrollment ID and password entered by the user.
+            tuple: The userName and password entered by the user.
         """
-        return (self.__enrollment_id.get(), self.__password.get())
+        return (self.__userName.get(), self.__password.get())
 
     def return_login_frame(self) -> ctk.CTkFrame:
         """Return the login frame."""

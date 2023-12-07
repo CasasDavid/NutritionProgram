@@ -33,11 +33,11 @@ class Signup:
         self.width = width
         self.height = height
 
-        self.__name = ctk.StringVar()
         self.__enrollid = ctk.StringVar()
-        self.__phoneno = ctk.StringVar()
-        self.__room_no = ctk.StringVar()
-        self.__is_hosteller = ctk.StringVar()
+        self.__userName = ctk.StringVar()
+        self.__name = ctk.StringVar()
+        self.__apellido = ctk.StringVar()
+        self.__email = ctk.StringVar()
         self.__password = ctk.StringVar()
 
         self.text_font = ctk.CTkFont(family="Rockwell", size=20, weight="bold")
@@ -64,94 +64,66 @@ class Signup:
         self.bgLabel.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
         self.title = ctk.CTkLabel(
-            self.signup_frame, text="SignUp to Asclepius!", font=self.text_font
+            self.signup_frame, text="SignUp to #########", font=self.text_font
         ).place(relx=0.5, rely=0.05, anchor=ctk.CENTER)
 
         ctk.CTkLabel(
-            self.signup_frame, text="Full Name*", font=self.small_text_font
-        ).place(relx=0.1, rely=0.1, anchor=ctk.NW)
-
-        self.name_entry = ctk.CTkEntry(
             self.signup_frame,
-            textvariable=self.__name,
+            text="UserName",
             font=self.small_text_font,
-        )
-        self.name_entry.place(
-            relx=0.1, rely=0.15, width=300, height=30, anchor=ctk.NW
-        )
+        ).place(relx=0.1, rely=0.10, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.signup_frame,
+            textvariable=self.__userName,
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.15, width=300, height=30, anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.signup_frame,
-            text="Bennett Enrollment no.*",
+            text="Name",
             font=self.small_text_font,
         ).place(relx=0.1, rely=0.25, anchor=ctk.NW)
 
         ctk.CTkEntry(
             self.signup_frame,
-            textvariable=self.__enrollid,
+            textvariable=self.__name,
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.3, width=300, height=30, anchor=ctk.NW)
-
-        ctk.CTkLabel(
-            self.signup_frame, text="Room Number", font=self.small_text_font
-        ).place(relx=0.55, rely=0.4)
-        self.room_entry = ctk.CTkEntry(
-            self.signup_frame,
-            textvariable=self.__room_no,
-            font=self.small_text_font,
-            width=30,
-            fg_color="lightgrey",
-        )
-        self.room_entry.place(relx=0.55, rely=0.45, width=200, height=30)
-        self.room_entry.configure(state=ctk.DISABLED)
-
-        self.hostel_label = ctk.CTkLabel(
-            self.signup_frame,
-            text="Choose an Option*\n",
-            font=self.small_text_font,
-        ).place(relx=0.1, rely=0.4)
-
-        self.disableEntryRadioButton = ctk.CTkRadioButton(
-            self.signup_frame,
-            text="Day Scholar",
-            font=self.small_text_font,
-            variable=(self.__is_hosteller),
-            value="0",
-            command=self.disableEntry,
-        )
-
-        self.disableEntryRadioButton.place(relx=0.1, rely=0.45, anchor=ctk.NW)
-        self.enableEntryRadioButton = ctk.CTkRadioButton(
-            self.signup_frame,
-            text="Hosteller",
-            font=self.small_text_font,
-            variable=(self.__is_hosteller),
-            value="1",
-            command=self.enableEntry,
-        )
-        self.enableEntryRadioButton.place(relx=0.1, rely=0.5, anchor=ctk.NW)
+        ).place(relx=0.1, rely=0.30, width=300, height=30, anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.signup_frame,
-            text="Contact Number*",
+            text="Apellido",
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.57, anchor=ctk.NW)
+        ).place(relx=0.1, rely=0.40, anchor=ctk.NW)
 
         ctk.CTkEntry(
             self.signup_frame,
-            textvariable=self.__phoneno,
+            textvariable=self.__apellido,
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.62, width=300, height=30, anchor=ctk.NW)
+        ).place(relx=0.1, rely=0.45, width=300, height=30, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.signup_frame,
+            text="Email*",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.55, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.signup_frame,
+            textvariable=self.__email,
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.60, width=300, height=30, anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.signup_frame, text="Password*", font=self.small_text_font
-        ).place(relx=0.1, rely=0.69, anchor=ctk.NW)
+        ).place(relx=0.1, rely=0.70, anchor=ctk.NW)
         ctk.CTkEntry(
             self.signup_frame,
             show="*",
             font=self.small_text_font,
             textvariable=self.__password,
-        ).place(relx=0.1, rely=0.74, width=300, height=30, anchor=ctk.NW)
+        ).place(relx=0.1, rely=0.75, width=300, height=30, anchor=ctk.NW)
 
         self.register = ctk.CTkButton(
             self.signup_frame,
@@ -159,7 +131,7 @@ class Signup:
             font=self.text_font,
             command=self.submit,
             corner_radius=10,
-        ).place(relx=0.5, rely=0.87, width=150, height=40, anchor=ctk.CENTER)
+        ).place(relx=0.5, rely=0.90, width=150, height=40, anchor=ctk.CENTER)
 
     def enableEntry(self):
         self.room_entry.configure(state="normal", fg_color="white")
@@ -176,11 +148,12 @@ class Signup:
 
         if (
             (self.__name.get() == "")
-            or (self.__enrollid.get() == "")
-            or (self.__phoneno.get() == "")
+            or (self.__email.get() == "")
             or (self.__password.get() == "")
-            or (self.__is_hosteller.get() == "")
+            or (self.__apellido.get() == "")
+            or (self.__userName.get() == "")
         ):
+            print(self.__enrollid.get())
             ctk.CTkLabel(
                 self.signup_frame,
                 text="Please fill all the fields",
@@ -188,11 +161,11 @@ class Signup:
             ).place(relx=0.5, rely=0.95, anchor=ctk.CENTER)
 
         elif not re.match(
-            r"^(?=.*[A-Z])(?=.*[!@#$%^&*()]).*$", self.__enrollid.get()
+            r"^(?=.*[A-Z])", self.__userName.get()
         ):
             ctk.CTkLabel(
                 self.signup_frame,
-                text="Please enter a valid enrollment ID!",
+                text="Please enter a valid userName ID!",
                 corner_radius=10,
                 font=self.small_text_font,
             ).place(relx=0.5, rely=0.95, anchor=ctk.CENTER)
@@ -224,12 +197,11 @@ class Signup:
         """Returns the signup information"""
 
         return (
+            self.__userName.get(),
             self.__name.get(),
-            self.__enrollid.get().upper(),
-            self.__phoneno.get(),
-            self.__room_no.get(),
-            self.__is_hosteller.get(),
+            self.__apellido.get(),
             self.__password.get(),
+            self.__email.get(),
         )
 
     def return_signup_frame(self) -> ctk.CTkFrame:
