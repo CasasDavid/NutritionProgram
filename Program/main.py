@@ -9,11 +9,11 @@ home_window = home_screen.HomeScreen(
 home_window.show_homescreen()
 
 dash_board = dashboard.Dashboard(
-    width=1280,
+    width=1380,
     height=720,
     appearance="dark",
     theme_color="green",
-    enrollment_id=home_window.get_user_enrollment_id(),
+    userName=home_window.get_user_enrollment_id(),
 )
 
 dash_board.show_dashboard()

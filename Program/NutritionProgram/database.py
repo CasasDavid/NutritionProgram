@@ -1,31 +1,31 @@
-"""Database module for Asclepius."""
+"""Database module"""
 import sqlite3
-
+import uuid
 
 class Database:
-    """Database class for Asclepius."""
+    """Database class"""
 
     def __init__(self, module_name: str = "Not Provided") -> None:
         """Initialize the database connection and cursor."""
         try:
-            self.connection = sqlite3.connect("Program/DataBase/asclepius.db")
+            self.connection = sqlite3.connect("Program/DataBase/DataBase.db")
             self.cursor = self.connection.cursor()
             print("Database connection successful -", module_name)
 
         except sqlite3.OperationalError as error:
             print("Error: ", error)
 
-    def get_medicines(self) -> list:
-        """Get a medicine from the database.
+    def get_patients(self) -> list:
+        """Get a patients from the database.
 
         Returns:
-            list: All Medicine details
+            list: All patiends details
         """
-        self.cursor.execute("SELECT * FROM medicines")
+        self.cursor.execute("SELECT * FROM patients")
         return self.cursor.fetchall()
 
     def get_col_headings(self, table_name: str) -> list:
-        """Get the column headings of the medicines table.
+        """Get the column headings of the patients table.
 
         Args:
             table_name: Name of the table
@@ -48,39 +48,51 @@ class Database:
         """
 
         username = credentials[0]
-        enrollid = credentials[1]
-        contact = credentials[2]
-        roomno = credentials[3]
-        hosteller = credentials[4]
-        password = credentials[5]
+        Nombre = credentials[1]
+        Apellido = credentials[2]
+        password = credentials[3]
+        email = credentials[4]
+        enrollid = str(uuid.uuid4())
 
         try:
             self.cursor.execute(
                 "INSERT INTO credentials VALUES (?, ?, ?, ?, ?,?)",
-                (enrollid, username, hosteller, roomno, contact, password),
+                (enrollid, username, Nombre, Apellido, email, password),
             )
             self.connection.commit()
 
             print("Signup successful")
             return True
 
-        except sqlite3.IntegrityError:
+        except sqlite3.IntegrityError as e:
+            # Verificar el código de error para determinar la causa específica
+            error_code = e.args[0]
 
-            print("Error: Enrollment ID already exists")
-            return False
+            if error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.enrollid" in str(e):
+                print("Error: Enrollment ID already exists")
+                return False
+            elif error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.username" in str(e):
+                print("Error: Username already exists")
+                return False
+            elif error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.email" in str(e):
+                print("Error: Email address already exists")
+                return False
+            else:
+                print("Error: Database operation failed")
+                return False
 
-    def get_signupdetails(self, enrollment_id: str) -> list:
+    def get_signupdetails(self, username: str) -> list:
         """Get the signup details of the user.
 
         Args:
-            enrollment_id (str): Enrollment ID of the user
+            username (str): username ID of the user
 
         Returns:
             list: Signup details
         """
         self.cursor.execute(
-            "SELECT * FROM credentials WHERE enrollid = (?)",
-            (enrollment_id.upper(),),
+            "SELECT * FROM credentials WHERE username = (?)",
+            (username,),
         )
         return self.cursor.fetchone()
 
@@ -94,8 +106,8 @@ class Database:
             bool: True if credentials are correct, False otherwise
         """
         self.cursor.execute(
-            "SELECT * FROM credentials WHERE enrollid = (?)",
-            (credentials[0].upper(),),
+            "SELECT * FROM credentials WHERE username = (?)",
+            (credentials[0],),
         )
 
         fetched = self.cursor.fetchone()
