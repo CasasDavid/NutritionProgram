@@ -162,3 +162,50 @@ class Database:
 
         print(f"{len(mid_list)} orders added to the database")
         self.connection.commit()
+
+
+    def add_patient(self, credentials: tuple) -> bool:
+        """Add a new user to the database.
+
+        Args:
+            credentials (tuple): Patient credentials
+
+        Returns:
+            bool: True if user creation successful, False otherwise
+        """
+        
+        SK = str(uuid.uuid4())
+        Nombre = credentials[0]
+        Apellido = credentials[1]
+        ID = credentials[2] 
+        email = credentials[3]
+        edad = credentials[4]
+        estatura = credentials[5] 
+        ##AGREGAR EL RESTO DE VARIABLES PARA QUE SE VEA COMO EL FORMATO
+
+        try:
+            self.cursor.execute(
+                "INSERT INTO PatientTable VALUES (?, ?, ?, ?, ?,?,?)",
+                (SK, Nombre, Apellido,ID,email, edad, estatura),
+            )
+            self.connection.commit()
+
+            print("USER CREATED")
+            return True
+
+        except sqlite3.IntegrityError as e:
+            # Verificar el código de error para determinar la causa específica
+            error_code = e.args[0]
+
+            if error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.ID" in str(e):
+                print("Error: Ya existe un usuario con ese ID")
+                return False
+            elif error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.email" in str(e):
+                print("Error: Correo en formato inválido")
+                return False
+            elif error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.Nombre" in str(e):
+                print("Error: La extensión máxima del nombre es 30 caracteres")
+                return False
+            else:
+                print("Error: Database operation failed")
+                return False
