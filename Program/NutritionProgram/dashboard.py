@@ -37,7 +37,7 @@ class Dashboard:
         self.db_object = Database("Dashboard")
 
         self.dataset = self.db_object.get_patients()
-        self.col_headers = self.db_object.get_col_headings("patients")
+        self.col_headers = self.db_object.get_col_headings("PatientTable")
 
         ctk.set_appearance_mode(appearance)
         ctk.set_default_color_theme(theme_color)
@@ -51,7 +51,7 @@ class Dashboard:
         )
 
         self.order_list = []
-        self.column_widths = [200, 200, 200, 80, 150, 80]
+        self.column_widths = [200, 200, 200, 125, 200, 60, 90]
 
         # ------------------------ Fonts ------------------------#
         self.op_font = ctk.CTkFont(
@@ -277,11 +277,13 @@ class Dashboard:
         print("Order placed.")
 
     def new_patient(self) -> None:
-        """Pop up a window to confirm the order. Displays the order list."""
+        """Pop up a window to add new patient. """
 
         self.new_patient = ctk.CTkToplevel(self.root)
-        self.new_patient.title("New Patient Details")
+        self.new_patient.title("Información del nuevo paciente")
         self.new_patient.resizable(False, False)
+        self.new_patient.grab_set()
+
 
         center_window(self.new_patient, 1500, 800)
 
@@ -295,7 +297,8 @@ class Dashboard:
             self.new_patient,
             textvariable=self.__name,
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.15, width=300, height=30, anchor=ctk.NW)
+            width=300, height=30,
+        ).place(relx=0.1, rely=0.15,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -307,7 +310,8 @@ class Dashboard:
             self.new_patient,
             textvariable=self.__apellido,
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.25, width=300, height=30, anchor=ctk.NW)
+            width=300, height=30,
+        ).place(relx=0.1, rely=0.25,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -319,7 +323,8 @@ class Dashboard:
             self.new_patient,
             textvariable=self.__ID,
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.35, width=300, height=30, anchor=ctk.NW)
+            width=300, height=30,
+        ).place(relx=0.1, rely=0.35,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -331,7 +336,8 @@ class Dashboard:
             self.new_patient,
             textvariable=self.__email,
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.45, width=300, height=30, anchor=ctk.NW)
+            width=300, height=30,
+        ).place(relx=0.1, rely=0.45,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Estatura", font=self.small_text_font
@@ -341,7 +347,8 @@ class Dashboard:
             self.new_patient,
             textvariable=self.__estatura,
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.55, width=300, height=30, anchor=ctk.NW)
+            width=300, height=30,
+        ).place(relx=0.1, rely=0.55,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Edad", font=self.small_text_font
@@ -351,16 +358,20 @@ class Dashboard:
             self.new_patient,
             show="*",
             font=self.small_text_font,
+            width=300, height=30,
             textvariable=self.__edad,
-        ).place(relx=0.5, rely=0.65, width=300, height=30, anchor=ctk.NW)
+        ).place(relx=0.5, rely=0.65,  anchor=ctk.NW)
 
         # Create a button to add the patient
         ctk.CTkButton(
             self.new_patient,
             text="Añadir paciente",
             font=self.small_text_font,
+            width=150, height=40,
             command=self.add_patient_button_click,
-        ).place(relx=0.5, rely=0.70, width=150, height=40, anchor=ctk.CENTER)
+        ).place(relx=0.5, rely=0.70,  anchor=ctk.CENTER)
+        self.new_patient.lift()
+        self.new_patient.focus_force
 
     def add_patient_button_click(self):
         # Retrieve the data from the entry widgets

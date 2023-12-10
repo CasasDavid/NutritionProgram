@@ -21,7 +21,7 @@ class Database:
         Returns:
             list: All patiends details
         """
-        self.cursor.execute("SELECT * FROM patients")
+        self.cursor.execute("SELECT * FROM PatientTable")
         return self.cursor.fetchall()
 
     def get_col_headings(self, table_name: str) -> list:
