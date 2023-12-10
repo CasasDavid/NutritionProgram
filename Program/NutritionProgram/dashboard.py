@@ -77,6 +77,13 @@ class Dashboard:
         self.dashboard_frame = ctk.CTkFrame(self.root)
         self.mrec_frame = ctk.CTkFrame(self.root)
         self.mhelp_frame = ctk.CTkFrame(self.root)
+        # self.new_patient = ctk.CTkFrame(self.root)
+        self.__name = ctk.StringVar()
+        self.__apellido = ctk.StringVar()
+        self.__email = ctk.StringVar()
+        self.__edad = ctk.StringVar()
+        self.__estatura = ctk.StringVar()
+        self.__ID = ctk.StringVar()
 
         self.meds_frame = ctk.CTkFrame(self.root)
         self.meds_canvas = ctk.CTkCanvas(self.meds_frame)
@@ -269,87 +276,111 @@ class Dashboard:
         self.order_confirmation.destroy()
         print("Order placed.")
 
-    def place_order(self) -> None:
+    def new_patient(self) -> None:
         """Pop up a window to confirm the order. Displays the order list."""
 
-        self.order_confirmation = ctk.CTkToplevel(self.root)
-        self.order_confirmation.title("Order Confirmation")
-        self.order_confirmation.resizable(False, False)
+        self.new_patient = ctk.CTkToplevel(self.root)
+        self.new_patient.title("New Patient Details")
+        self.new_patient.resizable(False, False)
 
-        center_window(self.order_confirmation, 1000, 400)
+        center_window(self.new_patient, 1500, 800)
 
-        if not self.order_list:
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Nombre",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.10, anchor=ctk.NW)
 
-            order_confirmation_label = ctk.CTkLabel(
-                self.order_confirmation,
-                text="No medicines selected.",
-                font=self.text_font,
-            )
-            order_confirmation_label.pack(padx=20, pady=20, anchor=ctk.CENTER)
+        ctk.CTkEntry(
+            self.new_patient,
+            textvariable=self.__name,
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.15, width=300, height=30, anchor=ctk.NW)
 
-            close_button = ctk.CTkButton(
-                self.order_confirmation,
-                text="Close Window",
-                command=self.order_confirmation.destroy,
-            )
-            close_button.pack(pady=20)
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Apellido",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.20, anchor=ctk.NW)
 
+        ctk.CTkEntry(
+            self.new_patient,
+            textvariable=self.__apellido,
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.25, width=300, height=30, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text="ID",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.30, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.new_patient,
+            textvariable=self.__ID,
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.35, width=300, height=30, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Correo electrónico",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.40, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.new_patient,
+            textvariable=self.__email,
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.45, width=300, height=30, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient, text="Estatura", font=self.small_text_font
+        ).place(relx=0.1, rely=0.50, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.new_patient,
+            textvariable=self.__estatura,
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.55, width=300, height=30, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient, text="Edad", font=self.small_text_font
+        ).place(relx=0.5, rely=0.60, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.new_patient,
+            show="*",
+            font=self.small_text_font,
+            textvariable=self.__edad,
+        ).place(relx=0.5, rely=0.65, width=300, height=30, anchor=ctk.NW)
+
+        # Create a button to add the patient
+        ctk.CTkButton(
+            self.new_patient,
+            text="Añadir paciente",
+            font=self.small_text_font,
+            command=self.add_patient_button_click,
+        ).place(relx=0.5, rely=0.70, width=150, height=40, anchor=ctk.CENTER)
+
+    def add_patient_button_click(self):
+        # Retrieve the data from the entry widgets
+        nombre = self.__name.get()
+        apellido = self.__apellido.get()
+        id = self.__ID.get()
+        email = self.__email.get()
+        estatura = self.__estatura.get()
+        edad = self.__edad.get()
+
+        # Create an instance of the Database class
+        database = Database()
+
+        # Call the add_patient method with the retrieved data
+        success = database.add_patient((nombre, apellido, id, email, estatura, edad))
+
+        if success:
+            print("Patient added successfully")
         else:
-
-            order_confirmation_label = ctk.CTkLabel(
-                self.order_confirmation,
-                text="The following medicines have been selected:",
-                font=self.text_font,
-            )
-            order_confirmation_label.pack(padx=20, pady=20, anchor=ctk.CENTER)
-
-            order_list_frame = ctk.CTkFrame(self.order_confirmation)
-
-            row = 0
-            total_amount = 0
-            for i in self.dataset:
-                if i[0] in self.order_list:
-
-                    for j in range(0, len(i) - 1):
-                        order_cell = ctk.CTkEntry(
-                            order_list_frame,
-                            width=self.column_widths[j],
-                        )
-                        try:
-                            order_cell.insert(0, i[j].capitalize())
-                        except AttributeError:
-                            order_cell.insert(0, i[j])
-                        order_cell.grid(
-                            row=row,
-                            column=(j + 1),
-                            pady=5,
-                            ipady=1,
-                            padx=5,
-                        )
-                    row += 1
-                    total_amount += i[-2]
-
-            order_list_frame.pack(padx=20, pady=20, anchor=ctk.CENTER)
-
-            self.final_confirmation_button = ctk.CTkButton(
-                self.order_confirmation,
-                text="Confirm Order",
-                font=self.text_font,
-                command=self.final_confirm_button_pressed,
-                corner_radius=10,
-                height=40,
-            )
-
-            total_amount_label = ctk.CTkLabel(
-                self.order_confirmation,
-                text=f"Number of medicines ordered: {row}\nTotal Amount: {total_amount}",
-                font=self.text_font,
-            )
-
-            total_amount_label.pack(padx=20, pady=20, anchor=ctk.CENTER)
-            self.final_confirmation_button.pack(
-                padx=20, pady=20, anchor=ctk.CENTER
-            )
+            print("Failed to add patient")
 
     def display_table(self) -> None:
         """Display the table of medicines."""
@@ -506,7 +537,7 @@ class Dashboard:
         )
 
         place_order_button = ctk.CTkButton(
-            self.meds_frame, text="Crear usuario", command=self.place_order
+            self.meds_frame, text="Añadir paciente nuevo", command=self.new_patient
         )
         place_order_button.pack(padx=(0, 25), side="bottom", anchor=ctk.E)
 
