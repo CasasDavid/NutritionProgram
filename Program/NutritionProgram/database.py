@@ -181,12 +181,14 @@ class Database:
         email = credentials[3]
         edad = credentials[4]
         estatura = credentials[5] 
+        Peso:credentials[7]
+        Telefono:credentials[8]
         ##AGREGAR EL RESTO DE VARIABLES PARA QUE SE VEA COMO EL FORMATO
 
         try:
             self.cursor.execute(
-                "INSERT INTO PatientTable VALUES (?, ?, ?, ?, ?,?,?)",
-                (SK, Nombre, Apellido,ID,email, edad, estatura),
+                "INSERT INTO PatientTable VALUES (?, ?, ?, ?, ?,?,?,?,?)",
+                (SK, Nombre, Apellido,ID,email, edad, estatura,Peso,Telefono),
             )
             self.connection.commit()
 
@@ -209,3 +211,86 @@ class Database:
             else:
                 print("Error: Database operation failed")
                 return False
+            
+    def view_client_info(self, patient_id: str) -> dict:
+        """Get patient information based on SK.
+
+        Args:
+            patient_id (str): Patient ID (SK).
+
+        Returns:
+            dict: Patient information as a dictionary.
+                  Returns an empty dictionary if the patient is not found.
+        """
+        try:
+            self.cursor.execute(
+                "SELECT * FROM PatientTable WHERE SK = ?",
+                (patient_id,),
+            )
+            patient_info = self.cursor.fetchone()
+
+            if patient_info:
+                # Convierte la fila de la base de datos a un diccionario para facilitar su uso
+                patient_dict = {
+                    "SK": patient_info[0],
+                    "Nombre": patient_info[1],
+                    "Apellido": patient_info[2],
+                    "ID": patient_info[3],
+                    "email": patient_info[4],
+                    "edad": patient_info[5],
+                    "estatura": patient_info[6],
+                    "Peso":patient_info[7],
+                    "Telefono":patient_info[8]
+                    # Agrega más campos según sea necesario
+                }
+                return patient_dict
+            else:
+                print(f"No se encontró un paciente con SK: {patient_id}")
+                return {}
+
+        except Exception as e:
+            print(f"Error al obtener información del paciente: {e}")
+            return {}
+        
+    def insertar_registro(self,register: tuple):
+    # Insertar datos en la tabla Registro'
+        try:
+            self.cursor.execute(
+                "INSERT INTO PatientTable VALUES (?, ?, ?, ?, ?)",
+                (register[0], register[1], register[2], register[3], register[4]),
+            )
+            self.connection.commit()
+
+            print("Registro creado")
+
+        except Exception as e:
+            print(f"Error al crear registro del paciente: {e}")
+            return {}
+
+    def view_client_register(self, patient_id: str) -> dict:
+        """Get patient information based on SK del paciente.
+
+        Args:
+            patient_id (str): Patient ID (SK).
+
+        Returns:
+            dict: Patient information as a dictionary.
+                  Returns an empty dictionary if the patient is not found.
+        """
+        try:
+            self.cursor.execute(
+                "SELECT * FROM Registro WHERE paciente = ? ORDER BY Fecha DESC LIMIT 5",
+                (patient_id,),
+            )
+            patient_info = self.cursor.fetchall()
+
+            if patient_info:
+
+                return patient_info
+            else:
+                print(f"No se encontró un paciente con SK: {patient_id}")
+                return {}
+
+        except Exception as e:
+            print(f"Error al obtener información del paciente: {e}")
+            return {}

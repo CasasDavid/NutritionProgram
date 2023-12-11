@@ -52,6 +52,7 @@ class Dashboard:
 
         self.order_list = []
         self.column_widths = [200, 200, 200, 125, 200, 60, 90]
+        self.column_widths_register = [200, 200, 200, 200, 200, 200, 200]
 
         # ------------------------ Fonts ------------------------#
         self.op_font = ctk.CTkFont(
@@ -84,14 +85,22 @@ class Dashboard:
         self.__edad = ctk.StringVar()
         self.__estatura = ctk.StringVar()
         self.__ID = ctk.StringVar()
+        self.__Telefono=ctk.StringVar()
+        self.__peso=ctk.StringVar()
 
         self.meds_frame = ctk.CTkFrame(self.root)
         self.meds_canvas = ctk.CTkCanvas(self.meds_frame)
         self.scrollable_frame = ctk.CTkFrame(self.meds_canvas)
-        self.scrollbar = ctk.CTkScrollbar(
+        self.scrollbarVertical = ctk.CTkScrollbar(
             self.meds_frame,
             orientation=ctk.VERTICAL,
             command=self.meds_canvas.yview,
+            width=30,
+        )
+        self.scrollbarHorizontal = ctk.CTkScrollbar(
+            self.meds_frame,
+            orientation=ctk.HORIZONTAL,
+            command=self.meds_canvas.xview,
             width=30,
         )
 
@@ -298,80 +307,113 @@ class Dashboard:
             textvariable=self.__name,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.1, rely=0.15,  anchor=ctk.NW)
+        ).place(relx=0.2, rely=0.10,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
             text="Apellido",
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.20, anchor=ctk.NW)
+        ).place(relx=0.5, rely=0.10, anchor=ctk.NW)
 
         ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__apellido,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.1, rely=0.25,  anchor=ctk.NW)
+        ).place(relx=0.6, rely=0.1,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
             text="ID",
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.30, anchor=ctk.NW)
+        ).place(relx=0.1, rely=0.2, anchor=ctk.NW)
 
         ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__ID,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.1, rely=0.35,  anchor=ctk.NW)
+        ).place(relx=0.2, rely=0.2,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Teléfono",
+            font=self.small_text_font,
+        ).place(relx=0.5, rely=0.20, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.new_patient,
+            textvariable=self.__Telefono,
+            font=self.small_text_font,
+            width=300, height=30,
+        ).place(relx=0.6, rely=0.20,  anchor=ctk.NW)
+
 
         ctk.CTkLabel(
             self.new_patient,
             text="Correo electrónico",
             font=self.small_text_font,
-        ).place(relx=0.1, rely=0.40, anchor=ctk.NW)
+        ).place(relx=0.1, rely=0.3, anchor=ctk.NW)
 
         ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__email,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.1, rely=0.45,  anchor=ctk.NW)
+        ).place(relx=0.2, rely=0.3,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Estatura", font=self.small_text_font
-        ).place(relx=0.1, rely=0.50, anchor=ctk.NW)
+        ).place(relx=0.5, rely=0.3, anchor=ctk.NW)
 
         ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__estatura,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.1, rely=0.55,  anchor=ctk.NW)
+        ).place(relx=0.6, rely=0.3,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Edad", font=self.small_text_font
-        ).place(relx=0.5, rely=0.60, anchor=ctk.NW)
+        ).place(relx=0.5, rely=0.4, anchor=ctk.NW)
 
         ctk.CTkEntry(
             self.new_patient,
-            show="*",
             font=self.small_text_font,
             width=300, height=30,
             textvariable=self.__edad,
-        ).place(relx=0.5, rely=0.65,  anchor=ctk.NW)
+        ).place(relx=0.6, rely=0.4,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient, text="Peso", font=self.small_text_font
+        ).place(relx=0.1, rely=0.40, anchor=ctk.NW)
+
+        ctk.CTkEntry(
+            self.new_patient,
+            font=self.small_text_font,
+            width=300, height=30,
+            textvariable=self.__peso,
+        ).place(relx=0.2, rely=0.40,  anchor=ctk.NW)
 
         # Create a button to add the patient
         ctk.CTkButton(
             self.new_patient,
             text="Añadir paciente",
             font=self.small_text_font,
-            width=150, height=40,
             command=self.add_patient_button_click,
-        ).place(relx=0.5, rely=0.70,  anchor=ctk.CENTER)
+        ).place(relx=0.4, rely=0.9,  anchor=ctk.CENTER)
         self.new_patient.lift()
         self.new_patient.focus_force
+
+         # Agrega un botón para cerrar la ventana emergente
+
+        close_button = ctk.CTkButton(
+            self.new_patient,
+            text="Cerrar",
+            font=self.small_text_font,
+            command=self.new_patient.destroy,
+        )
+        close_button.place(relx=0.6, rely=0.9, anchor=ctk.CENTER)
 
     def add_patient_button_click(self):
         # Retrieve the data from the entry widgets
@@ -396,9 +438,7 @@ class Dashboard:
     def display_table(self) -> None:
         """Display the table of medicines."""
 
-        check_box_var = ctk.StringVar()
-
-        for pos, text in enumerate(self.col_headers):
+        for pos, text in enumerate(self.col_headers[0:5]):
 
             col_cell = ctk.CTkLabel(
                 self.scrollable_frame,
@@ -414,7 +454,17 @@ class Dashboard:
         row = 2
         for i in self.dataset:
 
-            for j in range(0, len(i)):
+            # Create a button to view client information
+            view_button = ctk.CTkButton(
+                self.scrollable_frame,
+                text="View",
+                font=self.small_text_font,
+                command=lambda client_id=i[0]: self.view_patient_info(client_id),
+            )
+            view_button.grid(row=row, column=len(self.col_headers), padx=5)
+
+
+            for j in range(0, 5):
                 entry = ctk.CTkEntry(
                     self.scrollable_frame,
                     width=self.column_widths[j],
@@ -555,9 +605,11 @@ class Dashboard:
         self.meds_canvas.create_window(
             (0, 0), window=self.scrollable_frame, anchor=ctk.N
         )
-        self.meds_canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.meds_canvas.configure(yscrollcommand=self.scrollbarVertical.set)
+        self.meds_canvas.configure(xscrollcommand=self.scrollbarHorizontal.set)
 
-        self.scrollbar.pack(side="right", fill="y")
+        self.scrollbarVertical.pack(side="right", fill="y")
+        self.scrollbarHorizontal.pack(side="bottom", fill="x")
         self.meds_canvas.pack(side="left", fill="both", expand=True)
 
         self.display_table()
@@ -622,3 +674,188 @@ services and information about the wellness centre.
 
         center_window(self.root, self.width, self.height)
         self.root.mainloop()
+
+    def view_patient_info(self, patient_id: str) -> None:
+        """Show information of a patient in a pop-up window."""
+        # Create an instance of the Database class
+        database = Database()
+        patient_info = database.view_client_info(patient_id)
+        patient_register = database.view_client_register(patient_id)
+
+        if not patient_info:
+            print(f"No se encontró información del paciente con ID: {patient_id}")
+            return
+
+        self.new_patient = ctk.CTkToplevel(self.root)
+        self.new_patient.title("Información del Paciente")
+        self.new_patient.resizable(False, False)
+        self.new_patient.grab_set()
+
+        center_window(self.new_patient, 1500, 800)
+
+        # Mostrar la información del paciente utilizando CTkLabel
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Nombre",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.10, anchor=ctk.NW)
+        
+        ctk.CTkLabel(
+            self.new_patient,
+            text=patient_info['Nombre'],
+            font=self.small_text_font,
+            width=300, height=30,
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.2, rely=0.10,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Apellido",
+            font=self.small_text_font,
+        ).place(relx=0.5, rely=0.10, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text=patient_info['Apellido'],
+            font=self.small_text_font,
+            width=300, height=30,
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.6, rely=0.1,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text="ID",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.20, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text=patient_info['ID'],
+            font=self.small_text_font,
+            width=300, height=30,
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.2, rely=0.2,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Teléfono",
+            font=self.small_text_font,
+        ).place(relx=0.5, rely=0.20, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text=patient_info['Telefono'],
+            font=self.small_text_font,
+            width=300, height=30,
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.6, rely=0.20,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text="Email",
+            font=self.small_text_font,
+        ).place(relx=0.1, rely=0.30, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text=patient_info['email'],
+            font=self.small_text_font,
+            width=300, height=30,
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.2, rely=0.30,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient, text="Estatura", font=self.small_text_font
+        ).place(relx=0.5, rely=0.30, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            text=patient_info['estatura'],
+            font=self.small_text_font,
+            width=300, height=30,
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.6, rely=0.30,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient, text="Edad", font=self.small_text_font
+        ).place(relx=0.5, rely=0.40, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            font=self.small_text_font,
+            width=300, height=30,
+            text=patient_info['edad'],
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.6, rely=0.40,  anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient, text="Peso", font=self.small_text_font
+        ).place(relx=0.1, rely=0.40, anchor=ctk.NW)
+
+        ctk.CTkLabel(
+            self.new_patient,
+            font=self.small_text_font,
+            width=300, height=30,
+            text=patient_info['Peso'],
+            bg_color="gray",
+            corner_radius=180,
+        ).place(relx=0.2, rely=0.40,  anchor=ctk.NW)
+
+        # Create a frame for the table
+        table_frame = ctk.CTkFrame(self.new_patient)
+        table_frame.place(relx=0.1, rely=0.5, anchor=ctk.NW)
+
+        # Display the headers for the patient's register table
+        headers = ["Fecha", "Peso", "PGC", "PA", "D"]
+        for pos, text in enumerate(headers):
+            col_cell = ctk.CTkLabel(
+                table_frame,
+                text=text.capitalize(),
+                font=self.text_font,
+                width=200,
+                height=50,
+            )
+            col_cell.grid(row=1, column=pos, pady=(10, 20), ipady=1, padx=20)
+
+        row = 2  # Start from row 2 to avoid overlapping with previous entries
+        for i in patient_register:
+            for j in range(1, 6):  # Assuming the data starts from index 1 in each entry
+                entry = ctk.CTkEntry(
+                    table_frame,
+                    width=200,
+                    font=self.small_text_font,
+                )
+                entry.grid(row=row, column=j-1, ipady=5, sticky=ctk.NW)
+
+                try:
+                    entry.insert(ctk.END, i[j].capitalize())
+                except AttributeError:
+                    entry.insert(ctk.END, i[j])
+
+                entry.configure(state=ctk.DISABLED)
+
+            row += 1
+
+        
+        # Agrega un botón para cerrar la ventana emergente
+        close_button = ctk.CTkButton(
+            self.new_patient,
+            text="Cerrar",
+            font=self.small_text_font,
+            command=self.new_patient.destroy,
+        )
+        close_button.place(relx=0.5, rely=0.9, anchor=ctk.CENTER)
+
+        # Set column weights for the table
+        self.new_patient.grid_columnconfigure(0, weight=1)  # Make the first column take 100% width
+        self.scrollable_frame.grid_columnconfigure(0, weight=1)  # Adjust the column weights for the table
+
+        self.new_patient.lift()
+        self.new_patient.focus_force()
