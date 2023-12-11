@@ -175,20 +175,24 @@ class Database:
         """
         
         SK = str(uuid.uuid4())
-        Nombre = credentials[0]
-        Apellido = credentials[1]
+        nombre = credentials[0]
+        apellido = credentials[1]
         ID = credentials[2] 
-        email = credentials[3]
-        edad = credentials[4]
-        estatura = credentials[5] 
-        Peso:credentials[7]
-        Telefono:credentials[8]
+        telefono=credentials[3]
+        email = credentials[4]
+        estatura = credentials[5]
+        peso=credentials [6]
+        edad = credentials[7]
+        genero=credentials[8]
+        alergias=credentials[9]
+        actividad=credentials[10]
+        examenes=credentials[11]
         ##AGREGAR EL RESTO DE VARIABLES PARA QUE SE VEA COMO EL FORMATO
 
         try:
             self.cursor.execute(
-                "INSERT INTO PatientTable VALUES (?, ?, ?, ?, ?,?,?,?,?)",
-                (SK, Nombre, Apellido,ID,email, edad, estatura,Peso,Telefono),
+                "INSERT INTO PatientTable VALUES (?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?, ?)",
+                (SK, nombre, apellido, ID, telefono, email, estatura, peso, edad, genero, alergias, actividad, examenes),
             )
             self.connection.commit()
 
@@ -236,11 +240,16 @@ class Database:
                     "Nombre": patient_info[1],
                     "Apellido": patient_info[2],
                     "ID": patient_info[3],
-                    "email": patient_info[4],
-                    "edad": patient_info[5],
+                    "Telefono":patient_info[4],
+                    "email": patient_info[5],
                     "estatura": patient_info[6],
                     "Peso":patient_info[7],
-                    "Telefono":patient_info[8]
+                    "edad": patient_info[8],
+                    "Genero":patient_info[9],
+                    "Alergias":patient_info[10],
+                    "Actividad":patient_info[11],
+                    "Examenes":patient_info[12],
+
                     # Agrega más campos según sea necesario
                 }
                 return patient_dict
