@@ -4,7 +4,7 @@ faulthandler.enable()
 from NutritionProgram import dashboard, home_screen
 
 # home_window = home_screen.HomeScreen(
-#     width=500, height=500, appearance_mode="light", color_theme="green"
+#     width=500, height=500, appearance_mode="dark", color_theme="blue"
 # )
 # home_window.show_homescreen()
 

@@ -14,22 +14,9 @@ class receta:
 
     def insertar_receta(self, nombre, descripcion,ruta_pdf):
 
-        # Insertar la nueva receta en la base de datos
-        receta=self.db_object.add_receta((nombre,descripcion))
+        # Insertar la nueva receta en la base de datos y mueve el docuemnto de un lado a otro
+        self.db_object.add_receta((nombre,descripcion,ruta_pdf))
 
-        if receta:
-
-            # Directorio de destino para copiar el PDF
-            directorio_destino = 'assets/recetas/'
-
-            # Nombre del archivo en el directorio de destino
-            nombre_archivo_destino = f"{nombre}.pdf"
-
-            # Ruta completa del archivo en el directorio de destino
-            ruta_destino = os.path.join(directorio_destino, nombre_archivo_destino)
-
-            # Copiar el archivo PDF al directorio de destino
-            shutil.copy(ruta_pdf, ruta_destino)
 
         
         
