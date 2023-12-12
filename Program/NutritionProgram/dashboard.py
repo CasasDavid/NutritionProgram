@@ -1,9 +1,10 @@
 import customtkinter as ctk
 from PIL import Image
-
+import os
+from tkinter import filedialog
 from NutritionProgram.centerwin import center_window
 from NutritionProgram.database import Database
-
+from NutritionProgram.recetas import receta
 
 class Dashboard:
     """
@@ -16,7 +17,7 @@ class Dashboard:
         width: int = 2100,
         height: int = 720,
         appearance: str = "dark",
-        theme_color: str = "green",
+        theme_color: str = "blue",
         userName: str = "",
     ) -> None:
         """Constructor for Dashboard class for Asclepius.
@@ -35,6 +36,7 @@ class Dashboard:
         self.user_id = userName
 
         self.db_object = Database("Dashboard")
+        self.receta_manager=receta()
 
         self.dataset = self.db_object.get_patients()
         self.col_headers = self.db_object.get_col_headings("PatientTable")
@@ -43,11 +45,11 @@ class Dashboard:
         ctk.set_default_color_theme(theme_color)
 
         self.root = ctk.CTk()
-        self.root.title("#### nutricionista")
+        self.root.title("Nutrition Plan Assistant 1.0")
         # self.root.resizable(False, False)
 
         self.title_logo = ctk.CTkImage(
-            Image.open("assets/images/turtle.jpeg"), size=(125, 100)
+            Image.open("assets/images/logo.jpg"), size=(125, 100)
         )
 
         self.order_list = []
@@ -56,10 +58,10 @@ class Dashboard:
 
         # ------------------------ Fonts ------------------------#
         self.op_font = ctk.CTkFont(
-            family="Franklin Gothic", size=30, weight="bold", underline=True
+            family="Rockwell", size=30, weight="bold", underline=True
         )
         self.title_font = ctk.CTkFont(
-            family="Rockwell", size=60, weight="bold"
+            family="Rockwell", size=40, weight="bold"
         )
         self.text_font = ctk.CTkFont(
             family="Rockwell", size=20, weight="normal"
@@ -68,15 +70,14 @@ class Dashboard:
             family="Rockwell", size=20, weight="bold"
         )
         self.small_text_font = ctk.CTkFont(
-            family="Arial", size=18, weight="normal"
+            family="Rockwell", size=18, weight="normal"
         )
         self.tagline_font = ctk.CTkFont(
-            family="Rockwell", size=30, weight="normal"
+            family="Rockwell", size=15, weight="normal"
         )
         # ------------------------ Frames ------------------------#
 
         self.dashboard_frame = ctk.CTkFrame(self.root)
-        self.mrec_frame = ctk.CTkFrame(self.root)
         self.mhelp_frame = ctk.CTkFrame(self.root)
         # self.new_patient = ctk.CTkFrame(self.root)
         self.__name = ctk.StringVar()
@@ -108,6 +109,22 @@ class Dashboard:
             width=30,
         )
 
+        self.mrec_frame = ctk.CTkFrame(self.root)
+        self.mrec_canvas = ctk.CTkCanvas(self.mrec_frame)
+        self.scrollable_frame_mrec = ctk.CTkFrame(self.mrec_canvas )
+        self.scrollbarVertical_mrec = ctk.CTkScrollbar(
+            self.mrec_frame,
+            orientation=ctk.VERTICAL,
+            command=self.meds_canvas.yview,
+            width=30,
+        )
+        self.scrollbarHorizontal_mrec = ctk.CTkScrollbar(
+            self.mrec_frame,
+            orientation=ctk.HORIZONTAL,
+            command=self.meds_canvas.xview,
+            width=30,
+        )
+
     def title_frame(self, title: str) -> None:
         """Create the title frame.
 
@@ -124,7 +141,7 @@ class Dashboard:
         )
 
         tagline_label = ctk.CTkLabel(
-            title_frame, text="- Nacho Turtle", font=self.tagline_font
+            title_frame, text=" Auriculoterapia para bajar de peso, saludablemente, sin rebote... y sin dejar de comer.", font=self.tagline_font
         )
 
         title_logo_label = ctk.CTkLabel(
@@ -132,16 +149,22 @@ class Dashboard:
         )
 
         title_label.pack(side=ctk.LEFT, padx=(20, 0))
-        tagline_label.pack(side=ctk.LEFT, padx=(0, 20))
-        title_logo_label.pack(side=ctk.RIGHT, padx=(0, 20), pady=5)
+        tagline_label.place(relx=0.5, rely=0.4, anchor=ctk.CENTER, y=20)
+        title_logo_label.pack(side=ctk.RIGHT, padx=(0, 20))
 
         title_frame.pack(side=ctk.TOP, fill=ctk.X, padx=(0, 20), pady=20)
 
-    def update_data(self):
+    def update_table(self):
         # Actualiza el conjunto de datos y los encabezados de columna
         self.dataset = self.db_object.get_patients()
         self.col_headers = self.db_object.get_col_headings("PatientTable")
         self.display_table()
+
+    def update_table(self):
+        # Actualiza el conjunto de datos y los encabezados de columna
+        self.dataset = self.db_object.get_patients()
+        self.col_headers = self.db_object.get_col_headings("PatientTable")
+        self.display_mrec()
     
     def navigation_frame(self) -> None:
         """Create the navigation frame."""
@@ -151,7 +174,7 @@ class Dashboard:
         )
 
         navigation_title = ctk.CTkLabel(
-            navigation_frame, text="Panel de navegación", font=self.op_font
+            navigation_frame, text="Menú", font=self.op_font
         )
 
         dashboard_button = ctk.CTkButton(
@@ -183,7 +206,7 @@ class Dashboard:
 
         mrecord_button = ctk.CTkButton(
             navigation_frame,
-            text=" Planes nutricionales ",
+            text=" Planes diarios ",
             font=self.text_font_bold,
             command=lambda: self.reset_frame("mrecord"),
             corner_radius=10,
@@ -192,7 +215,7 @@ class Dashboard:
 
         light_mode = ctk.CTkButton(
             navigation_frame,
-            text=" Light Mode ",
+            text=" Modo claro ",
             font=self.text_font_bold,
             height=30,
             command=lambda: self.change_appearance_mode_event("Light"),
@@ -200,7 +223,7 @@ class Dashboard:
 
         dark_mode = ctk.CTkButton(
             navigation_frame,
-            text=" Dark Mode ",
+            text=" Modo oscuro ",
             font=self.text_font_bold,
             height=30,
             command=lambda: self.change_appearance_mode_event("Dark"),
@@ -208,7 +231,7 @@ class Dashboard:
 
         quit_button = ctk.CTkButton(
             navigation_frame,
-            text=" Quit ",
+            text=" Salir ",
             font=self.text_font_bold,
             command=self.root.destroy,
             corner_radius=10,
@@ -257,7 +280,9 @@ class Dashboard:
             self.mhelp_frame.pack_forget()
 
         if frame_name == "mrecord":
-            self.display_mrec()
+            self.mrec_frame.pack(
+                fill=ctk.BOTH, expand=True, padx=(0, 20), pady=(0, 20)
+            )
         else:
             self.mrec_frame.pack_forget()
 
@@ -491,7 +516,7 @@ class Dashboard:
             self.new_patient,
             text="Cerrar",
             font=self.small_text_font,
-            command=lambda:[self.new_patient.destroy(), self.update_data()],
+            command=lambda:[self.new_patient.destroy(), self.update_table()],
         )
         close_button.place(relx=0.55, rely=0.95, anchor=ctk.CENTER)
 
@@ -597,66 +622,116 @@ class Dashboard:
             row += 1
 
     def display_mrec(self) -> None:
-        """Display the medicine records of the user."""
+        """Muestra la lista de recetas que se tengan"""
 
-        mrec = self.db_object.get_medicine_record(self.user_id)
+        mrec = self.db_object.get_recetas()
 
-        if mrec == []:
-            ctk.CTkLabel(
-                self.mrec_frame,
-                text="No records found",
+        # if mrec == []:
+        #     ctk.CTkLabel(
+        #         self.mrec_frame,
+        #         text="No se han encontrado recetas",
+        #         font=self.text_font,
+        #     ).grid(row=1, column=0, padx=20, pady=20, sticky=ctk.NSEW)
+        # else:
+        mrec_col_headers = [
+            "Nombre",
+            "Descipción",
+        ]
+
+        mrec_col_widths = [400, 400]
+
+        """Lista de recetas"""
+        for pos, text in enumerate(mrec_col_headers):
+
+            col_cell = ctk.CTkLabel(
+                self.scrollable_frame_mrec,
+                text=text.capitalize(),
                 font=self.text_font,
-            ).grid(row=1, column=0, padx=20, pady=20, sticky=ctk.NSEW)
-        else:
-            mrec_col_headers = [
-                "Mid",
-                "Name",
-                "Treatment",
-                "Price",
-                "Time of Purchase",
-            ]
+                width=mrec_col_widths[pos],
+                height=50,
+            )
+            col_cell.grid(
+                row=1, column=(pos), pady=(10, 20), ipady=1, padx=5
+            )
 
-            mrec_col_widths = [80, 150, 450, 80, 220]
+        row = 2
+        for i in mrec:
 
-            for i in range(0, len(mrec_col_headers)):
-                col_cell = ctk.CTkEntry(
-                    self.mrec_frame,
-                    width=mrec_col_widths[i],
-                    font=self.text_font,
-                )
-                col_cell.insert(ctk.END, mrec_col_headers[i].capitalize())
-                col_cell.configure(state=ctk.DISABLED)
-                col_cell.grid(row=1, column=i, pady=(10, 20), ipady=1, padx=5)
+            # Create a button to view client information
+            view_button = ctk.CTkButton(
+                self.scrollable_frame_mrec,
+                text="Ver receta",
+                font=self.small_text_font,
+                command=lambda client_id=i[0]: self.view_patient_info(client_id),
+            )
+            view_button.grid(row=row, column=len(mrec_col_headers), padx=5)
 
-            for i in range(0, len(mrec)):
-                m_row = self.db_object.get_medicine_details(mrec[i][1])
-                for j in range(0, len(m_row) - 1):
-                    entry = ctk.CTkEntry(
-                        self.mrec_frame,
-                        width=self.column_widths[j],
-                        font=self.small_text_font,
-                    )
-                    try:
-                        entry.insert(ctk.END, m_row[j].capitalize())
-                    except AttributeError:
-                        entry.insert(ctk.END, m_row[j])
-                    entry.configure(state=ctk.DISABLED)
-                    entry.grid(row=(i + 2), column=j, padx=5)
-
-            for i in range(len(mrec)):
-                e = ctk.CTkEntry(
-                    self.mrec_frame,
-                    width=mrec_col_widths[4],
+            for j in range(1, 3):
+                entry = ctk.CTkEntry(
+                    self.scrollable_frame_mrec,
+                    width=mrec_col_widths[j-1],
                     font=self.small_text_font,
                 )
-                e.insert(ctk.END, mrec[i][2])
-                e.configure(state=ctk.DISABLED)
-                e.grid(row=(i + 2), column=4, padx=5)
+                entry.grid(row=row, column=(j-1), padx=5)
 
-        self.mrec_frame.pack(
-            fill=ctk.BOTH, expand=True, padx=(0, 20), pady=(0, 20)
+                try:
+                    entry.insert(ctk.END, i[j].capitalize())
+                except AttributeError:
+                    try:
+                        entry.insert(ctk.END, i[j])
+                    except:
+                        entry.insert(ctk.END,"")
+
+                entry.configure(state=ctk.DISABLED)
+
+            row += 1
+
+    def new_receta(self):
+        # Abre el cuadro de diálogo para seleccionar un archivo PDF
+        ruta_pdf = filedialog.askopenfilename(
+            title='Seleccionar archivo PDF',
+            filetypes=[('PDF files', '*.pdf')]
         )
 
+        if not ruta_pdf:
+            # El usuario canceló la selección del archivo
+            return
+
+        nombre=ctk.StringVar()
+        descripcion=ctk.StringVar()
+        # Crear una nueva ventana de diálogo para ingresar el nombre y la descripción de la receta
+        receta_info = ctk.CTkToplevel(self.root)
+        receta_info.title('Nueva Receta')
+
+        nombre_label = ctk.CTkLabel(receta_info, text='Nombre:')
+        nombre_label.grid(row=0, column=0, sticky='e', padx=5, pady=5)
+
+        nombre_entry = ctk.CTkEntry(receta_info,textvariable=nombre)
+        nombre_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        descripcion_label = ctk.CTkLabel(receta_info, text='Descripción:')
+        descripcion_label.grid(row=1, column=0, sticky='e', padx=5, pady=5)
+
+        descripcion_entry = ctk.CTkEntry(receta_info,textvariable=descripcion)
+        descripcion_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        # Función para cerrar la ventana de diálogo
+        def cerrar_ventana():
+            receta_info.destroy()
+
+        boton_aceptar = ctk.CTkButton(
+            receta_info,
+            text='Aceptar',
+            command=lambda: [cerrar_ventana(), self.receta_manager.insertar_receta(nombre.get(), descripcion.get(),ruta_pdf),self.display_mrec()]
+        )
+        boton_aceptar.grid(row=2, column=0, padx=5, pady=5)
+
+        boton_cancelar = ctk.CTkButton(receta_info, text='Cancelar', command=cerrar_ventana)
+        boton_cancelar.grid(row=2, column=1, padx=5, pady=5)
+
+        # Actualiza la visualización de las recetas
+        self.display_mrec()
+        
     def show_dashboard_frame(self) -> None:
         """Display the user dashboard."""
 
@@ -665,12 +740,12 @@ class Dashboard:
 
         ctk.CTkLabel(
             self.dashboard_frame,
-            text="########: Centro nutricionista",
+            text="Nutrition Plan Assistant",
             font=self.op_font,
         ).pack(padx=20, pady=20)
         ctk.CTkLabel(
             self.dashboard_frame,
-            text="""Hola!. Bienvenido a #####: Tu compañero nutricionista.""",
+            text="""¡Tu aliado #1 en planificación y control nutricional!""",
             font=self.text_font,
             anchor=ctk.CENTER,
         ).pack(anchor=ctk.CENTER, padx=20, pady=(20, 40))
@@ -769,11 +844,30 @@ services and information about the wellness centre.
         ).pack(anchor=ctk.W, padx=20, pady=10)
         # ----------------------- Med Help Dashboard -----------------------#
 
-        # -------------------- Medical Records Dashboard --------------------#
-        self.mrec_frame = ctk.CTkFrame(self.root)
-        ctk.CTkLabel(
-            self.mrec_frame, text="Medical Records", font=self.op_font
-        ).grid(row=0, column=0, padx=20, pady=20, columnspan=7)
+        # -------------------- Recetas Dashboard --------------------#
+        self.scrollable_frame_mrec.bind(
+            "<Configure>",
+            lambda e: self.mrec_canvas.configure(
+                scrollregion=self.mrec_canvas.bbox("all")
+            ),
+        )
+
+        place_order_button = ctk.CTkButton(
+            self.mrec_frame, text="Añadir receta nueva", command=self.new_receta
+        )
+        place_order_button.pack(padx=(0, 25), side="bottom", anchor=ctk.E)
+
+        self.mrec_canvas.create_window(
+            (0, 0), window=self.scrollable_frame_mrec, anchor=ctk.N
+        )
+        self.mrec_canvas.configure(yscrollcommand=self.scrollbarVertical_mrec.set)
+        self.mrec_canvas.configure(xscrollcommand=self.scrollbarHorizontal_mrec.set)
+
+        self.scrollbarVertical_mrec.pack(side="right", fill="y")
+        self.scrollbarHorizontal_mrec.pack(side="bottom", fill="x")
+        self.mrec_canvas.pack(side="left", fill="both", expand=True)
+
+        self.display_mrec()
         # -------------------- Medical Records Dashboard --------------------#
 
         self.dashboard_frame.pack(
@@ -784,7 +878,7 @@ services and information about the wellness centre.
         """Show the dashboard."""
 
         self.navigation_frame()
-        self.title_frame("Lion")
+        self.title_frame("Silueta...")
         self.show_dashboard_frame()
 
         center_window(self.root, self.width, self.height)
