@@ -137,6 +137,12 @@ class Dashboard:
 
         title_frame.pack(side=ctk.TOP, fill=ctk.X, padx=(0, 20), pady=20)
 
+    def update_data(self):
+        # Actualiza el conjunto de datos y los encabezados de columna
+        self.dataset = self.db_object.get_patients()
+        self.col_headers = self.db_object.get_col_headings("PatientTable")
+        self.display_table()
+    
     def navigation_frame(self) -> None:
         """Create the navigation frame."""
 
@@ -306,12 +312,13 @@ class Dashboard:
             font=self.small_text_font,
         ).place(relx=0.1, rely=0.10, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entryName = ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__name,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.2, rely=0.10,  anchor=ctk.NW)
+        )
+        entryName.place(relx=0.2, rely=0.10,  anchor=ctk.NW) 
 
         ctk.CTkLabel(
             self.new_patient,
@@ -319,12 +326,13 @@ class Dashboard:
             font=self.small_text_font,
         ).place(relx=0.5, rely=0.10, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entryApellido=ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__apellido,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.7, rely=0.1,  anchor=ctk.NW)
+        )
+        entryApellido.place(relx=0.7, rely=0.1,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -332,12 +340,13 @@ class Dashboard:
             font=self.small_text_font,
         ).place(relx=0.1, rely=0.20, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entryID=ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__ID,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.2, rely=0.2,  anchor=ctk.NW)
+        )
+        entryID.place(relx=0.2, rely=0.2,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -345,12 +354,13 @@ class Dashboard:
             font=self.small_text_font,
         ).place(relx=0.5, rely=0.20, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entrytelefono=ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__telefono,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.7, rely=0.20,  anchor=ctk.NW)
+        )
+        entrytelefono.place(relx=0.7, rely=0.20,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -358,93 +368,110 @@ class Dashboard:
             font=self.small_text_font,
         ).place(relx=0.1, rely=0.30, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entryemail=ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__email,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.2, rely=0.30,  anchor=ctk.NW)
+        )
+        entryemail.place(relx=0.2, rely=0.30,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Estatura", font=self.small_text_font
         ).place(relx=0.5, rely=0.30, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entryestatura=ctk.CTkEntry(
             self.new_patient,
             textvariable=self.__estatura,
             font=self.small_text_font,
             width=300, height=30,
-        ).place(relx=0.7, rely=0.30,  anchor=ctk.NW)
+        )
+        entryestatura.place(relx=0.7, rely=0.30,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Peso", font=self.small_text_font
         ).place(relx=0.1, rely=0.40, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entrypeso=ctk.CTkEntry(
             self.new_patient,
             font=self.small_text_font,
             width=300, height=30,
             textvariable=self.__peso,
-        ).place(relx=0.2, rely=0.40,  anchor=ctk.NW)
+        )
+        entrypeso.place(relx=0.2, rely=0.40,  anchor=ctk.NW)
        
         ctk.CTkLabel(
             self.new_patient, text="Edad", font=self.small_text_font
         ).place(relx=0.5, rely=0.40, anchor=ctk.NW)
 
-        ctk.CTkEntry(
+        entryedad=ctk.CTkEntry(
             self.new_patient,
             font=self.small_text_font,
             width=300, height=30,
             textvariable=self.__edad,
-        ).place(relx=0.7, rely=0.40,  anchor=ctk.NW)
+        )
+        entryedad.place(relx=0.7, rely=0.40,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Género", font=self.small_text_font
         ).place(relx=0.1, rely=0.50, anchor=ctk.NW)
  
-        ctk.CTkComboBox(
-        self.new_patient,
-        width=300,
-        height=15,
-        variable=self.__genero,
-        values=["Masculino","Femenino","Otro"],
-        ).place(relx=0.2,rely=0.50, anchor=ctk.NW)
+        entrygenero=ctk.CTkComboBox(
+            self.new_patient,
+            width=300,
+            height=15,
+            variable=self.__genero,
+            values=["Masculino","Femenino","Otro"],
+        )
+        entrygenero.place(relx=0.2,rely=0.50, anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Alergias", font=self.small_text_font
         ).place(relx=0.5, rely=0.50, anchor=ctk.NW)
  
-        ctk.CTkComboBox(
-        self.new_patient,
-        width=300,
-        height=15,
-        variable=self.__alergia,
-        values=["Nueces", "Mariscos","Fresas","Gluten", "Lactosa", "Ninguna"],
-        ).place(relx=0.7,rely=0.50, anchor=ctk.NW)
+        entryalergia=ctk.CTkComboBox(
+            self.new_patient,
+            width=300,
+            height=15,
+            variable=self.__alergia,
+            values=["Nueces", "Mariscos","Fresas","Gluten", "Lactosa", "Ninguna"],
+        )
+        entryalergia.place(relx=0.7,rely=0.50, anchor=ctk.NW)
         
         ctk.CTkLabel(
             self.new_patient, text="Actividad física", font=self.small_text_font
         ).place(relx=0.1, rely=0.60, anchor=ctk.NW)
  
-        ctk.CTkComboBox(
-        self.new_patient,
-        width=300,
-        height=15,
-        variable=self.__actividad,
-        values=["1-3 veces por semana","4-5 veces por semana","6 o más veces por semana", "Nula"],
-        ).place(relx=0.2,rely=0.60, anchor=ctk.NW)
+        entryactividad=ctk.CTkComboBox(
+            self.new_patient,
+            width=300,
+            height=15,
+            variable=self.__actividad,
+            values=["1-3 veces por semana","4-5 veces por semana","6 o más veces por semana", "Nula"],
+        )
+        entryactividad.place(relx=0.2,rely=0.60, anchor=ctk.NW)
         
         ctk.CTkLabel(
             self.new_patient, text="¿Tiene exámenes recientes?", font=self.small_text_font
         ).place(relx=0.5, rely=0.60, anchor=ctk.NW)
  
-        ctk.CTkComboBox(
-        self.new_patient,
-        width=300,
-        height=15,
-        variable=self.__examenes,
-        values=["Sí", "No"],
-        ).place(relx=0.7,rely=0.60, anchor=ctk.NW)
+        entryexamenes=ctk.CTkComboBox(
+            self.new_patient,
+            width=300,
+            height=15,
+            variable=self.__examenes,
+            values=["Sí", "No"],
+        )
+        entryexamenes.place(relx=0.7,rely=0.60, anchor=ctk.NW)
+
+        entryName.delete(0, ctk.END) 
+        entryApellido.delete(0, ctk.END) 
+        entryID.delete(0, ctk.END) 
+        entrytelefono.delete(0, ctk.END) 
+        entryemail.delete(0, ctk.END) 
+        entryestatura.delete(0, ctk.END) 
+        entrypeso.delete(0, ctk.END) 
+        entryedad.delete(0, ctk.END) 
 
 
         # Create a button to add the patient
@@ -454,6 +481,7 @@ class Dashboard:
             font=self.small_text_font,
             command=self.add_patient_button_click,
         ).place(relx=0.45, rely=0.95,  anchor=ctk.CENTER)
+        
         self.new_patient.lift()
         self.new_patient.focus_force
 
@@ -463,7 +491,7 @@ class Dashboard:
             self.new_patient,
             text="Cerrar",
             font=self.small_text_font,
-            command=self.new_patient.destroy,
+            command=lambda:[self.new_patient.destroy(), self.update_data()],
         )
         close_button.place(relx=0.55, rely=0.95, anchor=ctk.CENTER)
 
@@ -493,7 +521,34 @@ class Dashboard:
         else:
             print("Failed to add patient")
 
+    def upload_patient_button_click(self,SK):
+        # Retrieve the data from the entry widgets
+        nombre = self.__name.get()
+        apellido = self.__apellido.get()
+        ID = self.__ID.get()
+        telefono=self.__telefono.get()
+        email = self.__email.get()
+        estatura = self.__estatura.get()
+        peso=self.__peso.get()
+        edad = self.__edad.get()
+        genero=self.__genero.get()
+        alergias=self.__alergia.get()
+        actividad=self.__actividad.get()
+        examenes=self.__examenes.get()
+
+        # Create an instance of the Database class
+        database = Database()
+
+        # Call the add_patient method with the retrieved data
+        success = database.upload_patient((nombre, apellido,ID, telefono, email, estatura, peso, edad, genero, alergias, actividad, examenes),SK)
+
+        if success:
+            print("Patient uploaded successfully")
+        else:
+            print("Failed to upload patient")
+
     def display_table(self) -> None:
+
         """Display the table of medicines."""
         for pos, text in enumerate(self.col_headers[0:5]):
 
@@ -759,15 +814,14 @@ services and information about the wellness centre.
             text="Nombre",
             font=self.small_text_font,
         ).place(relx=0.1, rely=0.10, anchor=ctk.NW)
-        
-        ctk.CTkLabel(
+
+        entryName = ctk.CTkEntry(
             self.new_patient,
-            text=patient_info['Nombre'],
+            textvariable=self.__name,
             font=self.small_text_font,
             width=300, height=30,
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.2, rely=0.10,  anchor=ctk.NW)
+        )
+        entryName.place(relx=0.2, rely=0.10,  anchor=ctk.NW) 
 
         ctk.CTkLabel(
             self.new_patient,
@@ -775,14 +829,13 @@ services and information about the wellness centre.
             font=self.small_text_font,
         ).place(relx=0.5, rely=0.10, anchor=ctk.NW)
 
-        ctk.CTkLabel(
+        entryApellido=ctk.CTkEntry(
             self.new_patient,
-            text=patient_info['Apellido'],
+            textvariable=self.__apellido,
             font=self.small_text_font,
             width=300, height=30,
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.6, rely=0.1,  anchor=ctk.NW)
+        )
+        entryApellido.place(relx=0.7, rely=0.1,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -790,14 +843,13 @@ services and information about the wellness centre.
             font=self.small_text_font,
         ).place(relx=0.1, rely=0.20, anchor=ctk.NW)
 
-        ctk.CTkLabel(
+        entryID=ctk.CTkEntry(
             self.new_patient,
-            text=patient_info['ID'],
+            textvariable=self.__ID,
             font=self.small_text_font,
             width=300, height=30,
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.2, rely=0.2,  anchor=ctk.NW)
+        )
+        entryID.place(relx=0.2, rely=0.2,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -805,14 +857,13 @@ services and information about the wellness centre.
             font=self.small_text_font,
         ).place(relx=0.5, rely=0.20, anchor=ctk.NW)
 
-        ctk.CTkLabel(
+        entrytelefono=ctk.CTkEntry(
             self.new_patient,
-            text=patient_info['Telefono'],
+            textvariable=self.__telefono,
             font=self.small_text_font,
             width=300, height=30,
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.6, rely=0.20,  anchor=ctk.NW)
+        )
+        entrytelefono.place(relx=0.7, rely=0.20,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient,
@@ -820,106 +871,122 @@ services and information about the wellness centre.
             font=self.small_text_font,
         ).place(relx=0.1, rely=0.30, anchor=ctk.NW)
 
-        ctk.CTkLabel(
+        entryemail=ctk.CTkEntry(
             self.new_patient,
-            text=patient_info['email'],
+            textvariable=self.__email,
             font=self.small_text_font,
             width=300, height=30,
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.2, rely=0.30,  anchor=ctk.NW)
+        )
+        entryemail.place(relx=0.2, rely=0.30,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Estatura", font=self.small_text_font
         ).place(relx=0.5, rely=0.30, anchor=ctk.NW)
 
-        ctk.CTkLabel(
+        entryestatura=ctk.CTkEntry(
             self.new_patient,
-            text=patient_info['estatura'],
+            textvariable=self.__estatura,
             font=self.small_text_font,
             width=300, height=30,
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.6, rely=0.30,  anchor=ctk.NW)
-
-        ctk.CTkLabel(
-            self.new_patient, text="Edad", font=self.small_text_font
-        ).place(relx=0.5, rely=0.40, anchor=ctk.NW)
-
-        ctk.CTkLabel(
-            self.new_patient,
-            font=self.small_text_font,
-            width=300, height=30,
-            text=patient_info['edad'],
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.6, rely=0.40,  anchor=ctk.NW)
+        )
+        entryestatura.place(relx=0.7, rely=0.30,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Peso", font=self.small_text_font
         ).place(relx=0.1, rely=0.40, anchor=ctk.NW)
 
-        ctk.CTkLabel(
+        entrypeso=ctk.CTkEntry(
             self.new_patient,
             font=self.small_text_font,
             width=300, height=30,
-            text=patient_info['Peso'],
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.2, rely=0.40,  anchor=ctk.NW)
+            textvariable=self.__peso,
+        )
+        entrypeso.place(relx=0.2, rely=0.40,  anchor=ctk.NW)
+       
+        ctk.CTkLabel(
+            self.new_patient, text="Edad", font=self.small_text_font
+        ).place(relx=0.5, rely=0.40, anchor=ctk.NW)
 
+        entryedad=ctk.CTkEntry(
+            self.new_patient,
+            font=self.small_text_font,
+            width=300, height=30,
+            textvariable=self.__edad,
+        )
+        entryedad.place(relx=0.7, rely=0.40,  anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Género", font=self.small_text_font
         ).place(relx=0.1, rely=0.50, anchor=ctk.NW)
  
-        ctk.CTkLabel(
+        entrygenero=ctk.CTkComboBox(
             self.new_patient,
-            font=self.small_text_font,
-            width=300, height=30,
-            text=patient_info['Genero'],
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.2,rely=0.50, anchor=ctk.NW)
+            width=300,
+            height=15,
+            variable=self.__genero,
+            values=["Masculino","Femenino","Otro"],
+        )
+        entrygenero.place(relx=0.2,rely=0.50, anchor=ctk.NW)
 
         ctk.CTkLabel(
             self.new_patient, text="Alergias", font=self.small_text_font
         ).place(relx=0.5, rely=0.50, anchor=ctk.NW)
  
-        ctk.CTkLabel(
+        entryalergia=ctk.CTkComboBox(
             self.new_patient,
-            font=self.small_text_font,
-            width=300, height=30,
-            text=patient_info['Alergias'],
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.6,rely=0.50, anchor=ctk.NW)
+            width=300,
+            height=15,
+            variable=self.__alergia,
+            values=["Nueces", "Mariscos","Fresas","Gluten", "Lactosa", "Ninguna"],
+        )
+        entryalergia.place(relx=0.7,rely=0.50, anchor=ctk.NW)
         
         ctk.CTkLabel(
             self.new_patient, text="Actividad física", font=self.small_text_font
         ).place(relx=0.1, rely=0.60, anchor=ctk.NW)
  
-        ctk.CTkLabel(
+        entryactividad=ctk.CTkComboBox(
             self.new_patient,
-            font=self.small_text_font,
-            width=300, height=30,
-            text=patient_info['Actividad'],
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.2,rely=0.60, anchor=ctk.NW)
+            width=300,
+            height=15,
+            variable=self.__actividad,
+            values=["1-3 veces por semana","4-5 veces por semana","6 o más veces por semana", "Nula"],
+        )
+        entryactividad.place(relx=0.2,rely=0.60, anchor=ctk.NW)
         
         ctk.CTkLabel(
             self.new_patient, text="¿Tiene exámenes recientes?", font=self.small_text_font
         ).place(relx=0.5, rely=0.60, anchor=ctk.NW)
  
-        ctk.CTkLabel(
+        entryexamenes=ctk.CTkComboBox(
             self.new_patient,
-            font=self.small_text_font,
-            width=300, height=30,
-            text=patient_info['Examenes'],
-            bg_color="gray",
-            corner_radius=180,
-        ).place(relx=0.6,rely=0.60, anchor=ctk.NW)
+            width=300,
+            height=15,
+            variable=self.__examenes,
+            values=["Sí", "No"],
+        )
+        entryexamenes.place(relx=0.7,rely=0.60, anchor=ctk.NW)
+
+        entryName.delete(0, ctk.END) 
+        entryName.insert(ctk.END, patient_info['Nombre'])
+        entryApellido.delete(0, ctk.END) 
+        entryApellido.insert(ctk.END, patient_info['Apellido'])
+        entryID.delete(0, ctk.END) 
+        entryID.insert(ctk.END, patient_info['ID'])
+        entrytelefono.delete(0, ctk.END) 
+        entrytelefono.insert(ctk.END, patient_info['Telefono'])
+        entryemail.delete(0, ctk.END) 
+        entryemail.insert(ctk.END, patient_info['email'])
+        entryestatura.delete(0, ctk.END) 
+        entryestatura.insert(ctk.END, patient_info['estatura'])
+        entrypeso.delete(0, ctk.END) 
+        entrypeso.insert(ctk.END, patient_info['Peso'])
+        entryedad.delete(0, ctk.END) 
+        entryedad.insert(ctk.END, patient_info['edad'])
+        entrygenero.set(patient_info['Genero'])
+        entryalergia.set(patient_info['Alergias'])
+        entryactividad.set(patient_info['Actividad'])
+        entryexamenes.set(patient_info['Examenes'])
 
 
         # Create a frame for the table
@@ -965,7 +1032,16 @@ services and information about the wellness centre.
             font=self.small_text_font,
             command=self.new_patient.destroy,
         )
-        close_button.place(relx=0.5, rely=0.95, anchor=ctk.CENTER)
+        close_button.place(relx=0.55, rely=0.95, anchor=ctk.CENTER)
+
+        # Agrega un botón para guardar datos
+        close_button = ctk.CTkButton(
+            self.new_patient,
+            text="Guardar cambios",
+            font=self.small_text_font,
+            command=lambda: self.upload_patient_button_click(patient_id),
+        )
+        close_button.place(relx=0.45, rely=0.95, anchor=ctk.CENTER)
 
         # Set column weights for the table
         self.new_patient.grid_columnconfigure(0, weight=1)  # Make the first column take 100% width

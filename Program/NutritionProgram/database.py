@@ -163,7 +163,6 @@ class Database:
         print(f"{len(mid_list)} orders added to the database")
         self.connection.commit()
 
-
     def add_patient(self, credentials: tuple) -> bool:
         """Add a new user to the database.
 
@@ -203,6 +202,58 @@ class Database:
             # Verificar el código de error para determinar la causa específica
             error_code = e.args[0]
 
+            # if error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.ID" in str(e):
+            #     print("Error: Ya existe un usuario con ese ID")
+            #     return False
+            # elif error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.email" in str(e):
+            #     print("Error: Correo en formato inválido")
+            #     return False
+            # elif error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.Nombre" in str(e):
+            #     print("Error: La extensión máxima del nombre es 30 caracteres")
+            #     return False
+            # else:
+            #     print("Error: Database operation failed")
+            #     return False
+            
+    def upload_patient(self, credentials: tuple ,SK) -> bool:
+        """Add a new user to the database.
+
+        Args:
+            credentials (tuple): Patient credentials
+
+        Returns:
+            bool: True if user creation successful, False otherwise
+        """
+        
+        nombre = credentials[0]
+        apellido = credentials[1]
+        ID = credentials[2] 
+        telefono=credentials[3]
+        email = credentials[4]
+        estatura = credentials[5]
+        peso=credentials [6]
+        edad = credentials[7]
+        genero=credentials[8]
+        alergias=credentials[9]
+        actividad=credentials[10]
+        examenes=credentials[11]
+        ##AGREGAR EL RESTO DE VARIABLES PARA QUE SE VEA COMO EL FORMATO
+
+        try:
+            self.cursor.execute(
+                "UPDATE PatientTable SET Nombre=?, Apellido=?, ID=?, Telefono=?, Email=?, Estatura=?, Peso=?, Edad=?, Género=?, Alergias=?, Actividad=?, Exámenes=? WHERE SK=?",
+                (nombre, apellido, ID, telefono, email, estatura, peso, edad, genero, alergias, actividad, examenes, SK),
+            )
+            self.connection.commit()
+
+
+            print("USER UPDATED")
+            return True
+
+        except sqlite3.IntegrityError as e:
+            # Verificar el código de error para determinar la causa específica
+            error_code = e.args[0]
+
             if error_code == sqlite3.SQLITE_CONSTRAINT and "UNIQUE constraint failed: credentials.ID" in str(e):
                 print("Error: Ya existe un usuario con ese ID")
                 return False
@@ -215,7 +266,7 @@ class Database:
             else:
                 print("Error: Database operation failed")
                 return False
-            
+
     def view_client_info(self, patient_id: str) -> dict:
         """Get patient information based on SK.
 
