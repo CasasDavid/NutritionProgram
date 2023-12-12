@@ -12,7 +12,7 @@ dash_board = dashboard.Dashboard(
     width=1380,
     height=720,
     appearance="dark",
-    theme_color="green",
+    theme_color="blue",
     # userName=home_window.get_user_enrollment_id(),
     userName="Davidlcasas"
 )
