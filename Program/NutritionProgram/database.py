@@ -354,3 +354,43 @@ class Database:
         except Exception as e:
             print(f"Error al obtener información del paciente: {e}")
             return {}
+
+    def add_receta(self, info: tuple) -> bool:
+        """Se crea una receta en la base de datos.
+
+        Args:
+            Info (tuple): Información de la receta (Nombre,descripción)
+
+        Returns:
+            bool: True if user creation successful, False otherwise
+        """
+        
+        SK = str(uuid.uuid4())
+        nombre = info[0]
+        descipcion = info[1]
+        ruta = f'assets/recetas/{nombre}.pdf'
+        ##AGREGAR EL RESTO DE VARIABLES PARA QUE SE VEA COMO EL FORMATO
+
+        try:
+            self.cursor.execute(
+                "INSERT INTO recetas VALUES (?, ?, ?, ?)",
+                (SK, nombre, descipcion, ruta),
+            )
+            self.connection.commit()
+
+            print("USER CREATED")
+            # self.connection.close()
+            return True 
+        except sqlite3.IntegrityError as e:
+            # Verificar el código de error para determinar la causa específica
+            error_code = e.args[0]
+            print(error_code)
+
+    def get_recetas(self) -> list:
+        """Trae la lista de recetas de la base de datos.
+
+        Returns:
+            list: recetas
+        """
+        self.cursor.execute("SELECT * FROM recetas")
+        return self.cursor.fetchall()
