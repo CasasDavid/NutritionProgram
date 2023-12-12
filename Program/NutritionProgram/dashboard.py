@@ -16,7 +16,7 @@ class Dashboard:
         width: int = 2100,
         height: int = 720,
         appearance: str = "dark",
-        theme_color: str = "green",
+        theme_color: str = "blue",
         userName: str = "",
     ) -> None:
         """Constructor for Dashboard class for Asclepius.
@@ -43,11 +43,11 @@ class Dashboard:
         ctk.set_default_color_theme(theme_color)
 
         self.root = ctk.CTk()
-        self.root.title("#### nutricionista")
+        self.root.title("Nutrition Plan Assistant 1.0")
         # self.root.resizable(False, False)
 
         self.title_logo = ctk.CTkImage(
-            Image.open("assets/images/turtle.jpeg"), size=(125, 100)
+            Image.open("assets/images/logo.jpg"), size=(125, 100)
         )
 
         self.order_list = []
@@ -56,10 +56,10 @@ class Dashboard:
 
         # ------------------------ Fonts ------------------------#
         self.op_font = ctk.CTkFont(
-            family="Franklin Gothic", size=30, weight="bold", underline=True
+            family="Rockwell", size=30, weight="bold", underline=True
         )
         self.title_font = ctk.CTkFont(
-            family="Rockwell", size=60, weight="bold"
+            family="Rockwell", size=40, weight="bold"
         )
         self.text_font = ctk.CTkFont(
             family="Rockwell", size=20, weight="normal"
@@ -68,10 +68,10 @@ class Dashboard:
             family="Rockwell", size=20, weight="bold"
         )
         self.small_text_font = ctk.CTkFont(
-            family="Arial", size=18, weight="normal"
+            family="Rockwell", size=18, weight="normal"
         )
         self.tagline_font = ctk.CTkFont(
-            family="Rockwell", size=30, weight="normal"
+            family="Rockwell", size=15, weight="normal"
         )
         # ------------------------ Frames ------------------------#
 
@@ -124,7 +124,7 @@ class Dashboard:
         )
 
         tagline_label = ctk.CTkLabel(
-            title_frame, text="- Nacho Turtle", font=self.tagline_font
+            title_frame, text=" Auriculoterapia para bajar de peso, saludablemente, sin rebote... y sin dejar de comer.", font=self.tagline_font
         )
 
         title_logo_label = ctk.CTkLabel(
@@ -132,8 +132,9 @@ class Dashboard:
         )
 
         title_label.pack(side=ctk.LEFT, padx=(20, 0))
-        tagline_label.pack(side=ctk.LEFT, padx=(0, 20))
-        title_logo_label.pack(side=ctk.RIGHT, padx=(0, 20), pady=5)
+        #tagline_label.pack(side=ctk.LEFT, padx=(0, 20), pady=0) REVISAR Y ELIMINAR ESTA LINEA
+        tagline_label.place(relx=0.5, rely=0.4, anchor=ctk.CENTER, y=20)
+        title_logo_label.pack(side=ctk.RIGHT, padx=(0, 20))
 
         title_frame.pack(side=ctk.TOP, fill=ctk.X, padx=(0, 20), pady=20)
 
@@ -151,7 +152,7 @@ class Dashboard:
         )
 
         navigation_title = ctk.CTkLabel(
-            navigation_frame, text="Panel de navegación", font=self.op_font
+            navigation_frame, text="Menú", font=self.op_font
         )
 
         dashboard_button = ctk.CTkButton(
@@ -183,7 +184,7 @@ class Dashboard:
 
         mrecord_button = ctk.CTkButton(
             navigation_frame,
-            text=" Planes nutricionales ",
+            text=" Planes diarios ",
             font=self.text_font_bold,
             command=lambda: self.reset_frame("mrecord"),
             corner_radius=10,
@@ -192,7 +193,7 @@ class Dashboard:
 
         light_mode = ctk.CTkButton(
             navigation_frame,
-            text=" Light Mode ",
+            text=" Modo claro ",
             font=self.text_font_bold,
             height=30,
             command=lambda: self.change_appearance_mode_event("Light"),
@@ -200,7 +201,7 @@ class Dashboard:
 
         dark_mode = ctk.CTkButton(
             navigation_frame,
-            text=" Dark Mode ",
+            text=" Modo oscuro ",
             font=self.text_font_bold,
             height=30,
             command=lambda: self.change_appearance_mode_event("Dark"),
@@ -208,7 +209,7 @@ class Dashboard:
 
         quit_button = ctk.CTkButton(
             navigation_frame,
-            text=" Quit ",
+            text=" Salir ",
             font=self.text_font_bold,
             command=self.root.destroy,
             corner_radius=10,
@@ -665,12 +666,12 @@ class Dashboard:
 
         ctk.CTkLabel(
             self.dashboard_frame,
-            text="########: Centro nutricionista",
+            text="Nutrition Plan Assistant",
             font=self.op_font,
         ).pack(padx=20, pady=20)
         ctk.CTkLabel(
             self.dashboard_frame,
-            text="""Hola!. Bienvenido a #####: Tu compañero nutricionista.""",
+            text="""¡Tu aliado #1 en planificación y control nutricional!""",
             font=self.text_font,
             anchor=ctk.CENTER,
         ).pack(anchor=ctk.CENTER, padx=20, pady=(20, 40))
@@ -784,7 +785,7 @@ services and information about the wellness centre.
         """Show the dashboard."""
 
         self.navigation_frame()
-        self.title_frame("Lion")
+        self.title_frame("Silueta...")
         self.show_dashboard_frame()
 
         center_window(self.root, self.width, self.height)
