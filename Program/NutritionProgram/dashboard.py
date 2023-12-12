@@ -1,7 +1,9 @@
-import customtkinter as ctk
-from PIL import Image
-import os
-from tkinter import filedialog
+import customtkinter as ctk 
+import tkinter as tk
+from PIL import Image, ImageTk
+import subprocess
+import platform
+from tkinter import filedialog,messagebox
 from NutritionProgram.centerwin import center_window
 from NutritionProgram.database import Database
 from NutritionProgram.recetas import receta
@@ -76,7 +78,6 @@ class Dashboard:
             family="Rockwell", size=15, weight="normal"
         )
         # ------------------------ Frames ------------------------#
-
         self.dashboard_frame = ctk.CTkFrame(self.root)
         self.mhelp_frame = ctk.CTkFrame(self.root)
         # self.new_patient = ctk.CTkFrame(self.root)
@@ -197,7 +198,7 @@ class Dashboard:
 
         mhelp_button = ctk.CTkButton(
             navigation_frame,
-            text=" Buscar paciente ",
+            text=" Silueta ",
             font=self.text_font_bold,
             command=lambda: self.reset_frame("mhelp"),
             corner_radius=10,
@@ -625,14 +626,6 @@ class Dashboard:
         """Muestra la lista de recetas que se tengan"""
 
         mrec = self.db_object.get_recetas()
-
-        # if mrec == []:
-        #     ctk.CTkLabel(
-        #         self.mrec_frame,
-        #         text="No se han encontrado recetas",
-        #         font=self.text_font,
-        #     ).grid(row=1, column=0, padx=20, pady=20, sticky=ctk.NSEW)
-        # else:
         mrec_col_headers = [
             "Nombre",
             "Descipción",
@@ -662,8 +655,9 @@ class Dashboard:
                 self.scrollable_frame_mrec,
                 text="Ver receta",
                 font=self.small_text_font,
-                command=lambda client_id=i[0]: self.view_patient_info(client_id),
+                command=lambda receta_sk=i[0]: self.imprimir_pdf(receta_sk),
             )
+            # Asignar la función al botón
             view_button.grid(row=row, column=len(mrec_col_headers), padx=5)
 
             for j in range(1, 3):
@@ -687,6 +681,7 @@ class Dashboard:
             row += 1
 
     def new_receta(self):
+
         # Abre el cuadro de diálogo para seleccionar un archivo PDF
         ruta_pdf = filedialog.askopenfilename(
             title='Seleccionar archivo PDF',
@@ -702,20 +697,24 @@ class Dashboard:
         # Crear una nueva ventana de diálogo para ingresar el nombre y la descripción de la receta
         receta_info = ctk.CTkToplevel(self.root)
         receta_info.title('Nueva Receta')
+        center_window(receta_info, 400, 200)
+        receta_info.resizable(False, False)
+        receta_info.grab_set()
 
         nombre_label = ctk.CTkLabel(receta_info, text='Nombre:')
-        nombre_label.grid(row=0, column=0, sticky='e', padx=5, pady=5)
+        # nombre_label.grid(row=0, column=0, sticky='e', padx=5, pady=5)
+        nombre_label.place(relx=0.2,rely=0.2, anchor=ctk.NW)
 
         nombre_entry = ctk.CTkEntry(receta_info,textvariable=nombre)
-        nombre_entry.grid(row=0, column=1, padx=5, pady=5)
+        nombre_entry.place(relx=0.5,rely=0.2, anchor=ctk.NW)
 
         descripcion_label = ctk.CTkLabel(receta_info, text='Descripción:')
-        descripcion_label.grid(row=1, column=0, sticky='e', padx=5, pady=5)
+        descripcion_label.place(relx=0.2,rely=0.5, anchor=ctk.NW)
 
         descripcion_entry = ctk.CTkEntry(receta_info,textvariable=descripcion)
-        descripcion_entry.grid(row=1, column=1, padx=5, pady=5)
+        descripcion_entry.place(relx=0.5,rely=0.5, anchor=ctk.NW)
 
-        # Función para cerrar la ventana de diálogo
+        # Función para cerrar y aceptar la ventana de diálogo
         def cerrar_ventana():
             receta_info.destroy()
 
@@ -724,10 +723,10 @@ class Dashboard:
             text='Aceptar',
             command=lambda: [cerrar_ventana(), self.receta_manager.insertar_receta(nombre.get(), descripcion.get(),ruta_pdf),self.display_mrec()]
         )
-        boton_aceptar.grid(row=2, column=0, padx=5, pady=5)
+        boton_aceptar.place(relx=0.6,rely=0.8, anchor=ctk.NW)
 
         boton_cancelar = ctk.CTkButton(receta_info, text='Cancelar', command=cerrar_ventana)
-        boton_cancelar.grid(row=2, column=1, padx=5, pady=5)
+        boton_cancelar.place(relx=0.1,rely=0.8, anchor=ctk.NW)
 
         # Actualiza la visualización de las recetas
         self.display_mrec()
@@ -742,7 +741,7 @@ class Dashboard:
             self.dashboard_frame,
             text="Nutrition Plan Assistant",
             font=self.op_font,
-        ).pack(padx=20, pady=20)
+        ).pack(padx=20, pady=20) 
         ctk.CTkLabel(
             self.dashboard_frame,
             text="""¡Tu aliado #1 en planificación y control nutricional!""",
@@ -820,7 +819,7 @@ services and information about the wellness centre.
 
         ctk.CTkLabel(
             self.mhelp_frame,
-            text="About Asclepius",
+            text="Acerda de Silueta",
             font=self.op_font,
             anchor=ctk.CENTER,
         ).pack(padx=(20, 20), pady=20)
@@ -830,16 +829,16 @@ services and information about the wellness centre.
             font=self.small_text_font,
         ).pack(anchor=ctk.CENTER, padx=20)
         ctk.CTkLabel(
-            self.mhelp_frame, text="Contact Us", font=self.op_font
+            self.mhelp_frame, text="Contáctanos", font=self.op_font
         ).pack(anchor=ctk.W, padx=20, pady=20)
         ctk.CTkLabel(
             self.mhelp_frame,
-            text="For general queries- 0120-7199300",
+            text="----------------",
             font=self.small_text_font,
         ).pack(anchor=ctk.W, padx=20, pady=10)
         ctk.CTkLabel(
             self.mhelp_frame,
-            text="WhatsApp- +91 8860309257",
+            text="WhatsApp- 0999926455",
             font=self.small_text_font,
         ).pack(anchor=ctk.W, padx=20, pady=10)
         # ----------------------- Med Help Dashboard -----------------------#
@@ -1143,3 +1142,30 @@ services and information about the wellness centre.
 
         self.new_patient.lift()
         self.new_patient.focus_force()
+
+    def imprimir_pdf(self, receta_sk):
+
+        receta_info=self.db_object.get_receta(receta_sk)
+        pdf_file_path = receta_info["ruta"]
+        try:
+            if platform.system() == "Darwin":
+                # macOS: Usa 'open' para abrir el visor de PDF predeterminado
+                subprocess.run(["open", "-a", "Preview", pdf_file_path], check=True)
+            elif platform.system() == "Windows":
+                # Windows: Usa 'start' para abrir el visor de PDF predeterminado
+                subprocess.run(["start", "", pdf_file_path], shell=True, check=True)
+            else:
+                # Otros sistemas: Ajusta según sea necesario
+                messagebox.showerror("Plataforma no compatible", "Esta plataforma no está soportada.")
+        except subprocess.CalledProcessError:
+            messagebox.showerror("Error de impresión", "Error al intentar imprimir el PDF")
+
+        
+
+
+    
+
+
+
+
+    
