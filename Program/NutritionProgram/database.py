@@ -1,6 +1,8 @@
 """Database module"""
 import sqlite3
 import uuid
+import os
+import shutil
 
 class Database:
     """Database class"""
@@ -368,23 +370,45 @@ class Database:
         SK = str(uuid.uuid4())
         nombre = info[0]
         descipcion = info[1]
+        ruta_inicial=info[2]
         ruta = f'assets/recetas/{nombre}.pdf'
         ##AGREGAR EL RESTO DE VARIABLES PARA QUE SE VEA COMO EL FORMATO
 
         try:
+
+            self.connection.execute('BEGIN')
             self.cursor.execute(
                 "INSERT INTO recetas VALUES (?, ?, ?, ?)",
                 (SK, nombre, descipcion, ruta),
             )
+            
+            # Directorio de destino para copiar el PDF
+            directorio_destino = 'assets/recetas/'
+
+            # Nombre del archivo en el directorio de destino
+            nombre_archivo_destino = f"{nombre}.pdf"
+
+            # Ruta completa del archivo en el directorio de destino
+            ruta_destino = os.path.join(directorio_destino, nombre_archivo_destino)
+
+            # Copiar el archivo PDF al directorio de destino
+            shutil.copy(ruta_inicial, ruta_destino)
+
+            # Confirmar la transacción
             self.connection.commit()
 
             print("USER CREATED")
-            # self.connection.close()
+
             return True 
-        except sqlite3.IntegrityError as e:
-            # Verificar el código de error para determinar la causa específica
-            error_code = e.args[0]
-            print(error_code)
+        
+        
+        except Exception as e:
+            print(f"Error: {e}")
+            # Deshacer la transacción en caso de error
+            self.connection.rollback()
+        finally:
+            # Cerrar la conexión
+            self.connection.close()
 
     def get_recetas(self) -> list:
         """Trae la lista de recetas de la base de datos.
