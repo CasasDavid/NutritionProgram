@@ -406,9 +406,6 @@ class Database:
             print(f"Error: {e}")
             # Deshacer la transacción en caso de error
             self.connection.rollback()
-        finally:
-            # Cerrar la conexión
-            self.connection.close()
 
     def get_recetas(self) -> list:
         """Trae la lista de recetas de la base de datos.
@@ -418,3 +415,22 @@ class Database:
         """
         self.cursor.execute("SELECT * FROM recetas")
         return self.cursor.fetchall()
+    
+    def get_receta(self,SK) -> list:
+        """Trae la receta basado en el SK de la receta.
+
+        Returns:
+            receta info
+        """
+        self.cursor.execute("SELECT * FROM recetas WHERE SK = ?",(SK,),)
+        receta_info= self.cursor.fetchone()
+        if receta_info:
+            # Convierte la fila de la base de datos a un diccionario para facilitar su uso
+            patient_dict = {
+                "SK": receta_info[0],
+                "Nombre": receta_info[1],
+                "Descripcion": receta_info[2],
+                "ruta": receta_info[3],
+                # Agrega más campos según sea necesario
+            }
+            return patient_dict
