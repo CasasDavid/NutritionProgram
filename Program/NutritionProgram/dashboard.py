@@ -3,10 +3,12 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import subprocess
 import platform
-from tkinter import filedialog,messagebox
+from tkinter import filedialog,messagebox, simpledialog
+from datetime import datetime
 from NutritionProgram.centerwin import center_window
 from NutritionProgram.database import Database
 from NutritionProgram.recetas import receta
+
 
 class Dashboard:
     """
@@ -819,7 +821,7 @@ services and information about the wellness centre.
 
         ctk.CTkLabel(
             self.mhelp_frame,
-            text="Acerda de Silueta",
+            text="Acerca de Silueta",
             font=self.op_font,
             anchor=ctk.CENTER,
         ).pack(padx=(20, 20), pady=20)
@@ -1087,18 +1089,71 @@ services and information about the wellness centre.
         table_frame.place(relx=0.1, rely=0.7, anchor=ctk.NW)
 
         # Display the headers for the patient's register table
-        headers = ["Fecha", "Peso", "PGC", "PA", "D"]
+        headers = ["Fecha", "Peso", """%GC""", "%A", "Receta"]
         for pos, text in enumerate(headers):
             col_cell = ctk.CTkLabel(
                 table_frame,
-                text=text.capitalize(),
+                text=text,
                 font=self.text_font,
                 width=200,
                 height=50,
             )
             col_cell.grid(row=1, column=pos, pady=(10, 20), ipady=1, padx=20)
 
-        row = 2  # Start from row 2 to avoid overlapping with previous entries
+            #Imprime la fecha en que se ingresan los valores del paciente
+            self.__fecharegistro=ctk.StringVar()
+            fechaactual=datetime.now().date()
+            entryfecharegistro=ctk.CTkEntry(
+                self.new_patient,
+                font=self.small_text_font,
+                width=200, height=30,
+                textvariable=self.__fecharegistro,
+          )
+            entryfecharegistro.place(relx=0.1, rely=0.765, anchor=ctk.NW)
+            entryfecharegistro.delete(0, ctk.END) 
+            entryfecharegistro.insert(ctk.END, fechaactual)
+            #entryfecharegistro.grid(row=2, column=1, ipady=5, sticky=ctk.NW)
+
+            #Ingresa el peso tomado en el control con el paciente
+            self.__pesocontrol=ctk.IntVar()
+            entrypesocontrol=ctk.CTkEntry(
+            self.new_patient,
+            font=self.small_text_font,
+            width=200, height=30,
+            textvariable=self.__pesocontrol,
+        ).place(relx=0.26, rely=0.765,  anchor=ctk.NW)
+            
+            #Ingresa el porcentaje de grasa tomado en el control con el paciente
+            self.__porcentajegrasacontrol=ctk.IntVar()
+            entryporcentajegrasacontrol=ctk.CTkEntry(
+            self.new_patient,
+            font=self.small_text_font,
+            width=200, height=30,
+            textvariable=self.__porcentajegrasacontrol,
+        ).place(relx=0.42, rely=0.765,  anchor=ctk.NW)
+            
+            #Ingresa el porcentaje de agua tomado en el control con el paciente
+            self.__porcentajeaguacontrol=ctk.IntVar()
+            entryporcentajeaguacontrol=ctk.CTkEntry(
+            self.new_patient,
+            font=self.small_text_font,
+            width=200, height=30,
+            textvariable=self.__porcentajeaguacontrol,
+        ).place(relx=0.58, rely=0.765,  anchor=ctk.NW)
+    
+            #Agrega un botón para buscar la receta apropiada para el paciente
+        Recipe_lookup_button = ctk.CTkButton(
+            self.new_patient,
+            text="Buscar receta",
+            font=self.small_text_font,
+            command="",
+        ).place(relx=0.805, rely=0.783, anchor=ctk.CENTER)
+    
+
+
+            
+        
+        row = 3  # Start from row 3 to avoid overlapping with previous entries
         for i in patient_register:
             for j in range(1, 6):  # Assuming the data starts from index 1 in each entry
                 entry = ctk.CTkEntry(
