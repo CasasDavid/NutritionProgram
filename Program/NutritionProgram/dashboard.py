@@ -519,7 +519,7 @@ class Dashboard:
             self.new_patient,
             text="Cerrar",
             font=self.small_text_font,
-            command=lambda:[self.new_patient.destroy(), self.update_table()],
+            command=lambda:[self.new_patient.destroy(), self.update_table(),self.display_table()],
         )
         close_button.place(relx=0.55, rely=0.95, anchor=ctk.CENTER)
 
@@ -810,14 +810,9 @@ class Dashboard:
         # ----------------------- Med Help Dashboard -----------------------#
 
         wellness_description = """
-To ensure students’s well-being, Bennett provides a well-equipped wellness centre with four beds and round-the-clock,
-with a small nursing staff on standby. A well-qualified general physician is available on campus 24*7.For prolonged 
-medical illness, or for case of infection, recovery rooms are available. The centre organizes health check-up camps, 
-blood donation drives, and physiotherapy sessions for students and staff.
-
-Asclepius is a platform for students to access the wellness centre from anywhere. It provides all the necessary 
-services and information about the wellness centre.
-"""
+        Aquí puede ir un texto personalizado sobre Solueta, abajo puede haber información importante como contactos
+        de números de la empresa o relacionados.
+        """
 
         ctk.CTkLabel(
             self.mhelp_frame,
