@@ -1,0 +1,16 @@
+import faulthandler
+
+faulthandler.enable()
+from ProgramaDeNutricion import Dashboard
+
+dash_board = Dashboard.Dashboard(
+    width=1380,
+    height=720,
+    appearance="dark",
+    theme_color="blue",
+    userName="Davidlcasas"
+)
+
+dash_board.show_dashboard()
+
+print("Program exited successfully.")
