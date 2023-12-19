@@ -41,14 +41,15 @@ class Dashboard:
         self.user_id = userName
         self.db_object = BaseDeDatos("Dashboard")
         ctk.set_appearance_mode(appearance)
-        ctk.set_default_color_theme(theme_color)
+        # ctk.set_default_color_theme(theme_color)
+        ctk.set_default_color_theme("assets/SiluetaPalette.json")
 
         self.root = ctk.CTk()
         self.root.title("Nutrition Plan Assistant 1.0")
-        # self.root.resizable(False, False)
+
 
         self.title_logo = ctk.CTkImage(
-            Image.open("assets/images/logo.jpg"), size=(125, 100)
+            Image.open("assets/images/Silueta.png"), size=(250, 100)
         )
 
         # ------------------------ Fonts ------------------------#
