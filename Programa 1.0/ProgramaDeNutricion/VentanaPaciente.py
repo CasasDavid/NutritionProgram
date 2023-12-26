@@ -319,14 +319,14 @@ class VentanaPaciente():
             table_frame.place(relx=0.1, rely=0.7, anchor=ctk.NW)
 
             # Display the headers for the patient's register table
-            headers = ["Fecha", "Peso", """%GC""", "%A", "Receta"]
+            headers = ["Fecha", "Peso", """%GC""", "%A","Tipo de Receta", "Receta"]
             for pos, text in enumerate(headers):
                 col_cell = ctk.CTkLabel(
                     table_frame,
                     text=text,
                     font=self.text_font,
-                    width=200,
-                    height=50,
+                    width=170,
+                    height=25,
                 )
                 col_cell.grid(row=1, column=pos, pady=(10, 20), ipady=1, padx=20)
 
@@ -334,55 +334,76 @@ class VentanaPaciente():
             self.__fecharegistro=ctk.StringVar()
             fechaactual=datetime.now().date()
             entryfecharegistro=ctk.CTkEntry(
-                self.new_patient,
+                table_frame,
                 font=self.small_text_font,
                 width=200, height=30,
                 textvariable=self.__fecharegistro,
             )
-            entryfecharegistro.place(relx=0.1, rely=0.765, anchor=ctk.NW)
+            entryfecharegistro.grid(row=2, column=0, ipady=5, sticky=ctk.NW)
             entryfecharegistro.delete(0, ctk.END) 
             entryfecharegistro.insert(ctk.END, fechaactual)
-            #entryfecharegistro.grid(row=2, column=1, ipady=5, sticky=ctk.NW)
 
             #Ingresa el peso tomado en el control con el paciente
             self.__pesocontrol=ctk.IntVar()
             entrypesocontrol=ctk.CTkEntry(
-                self.new_patient,
+                table_frame,
                 font=self.small_text_font,
                 width=200, height=30,
                 textvariable=self.__pesocontrol,
-            ).place(relx=0.26, rely=0.765,  anchor=ctk.NW)
+            )
+            entrypesocontrol.grid(row=2, column=1, ipady=5, sticky=ctk.NW)
+            entrypesocontrol.delete(0, ctk.END) 
                 
             #Ingresa el porcentaje de grasa tomado en el control con el paciente
             self.__porcentajegrasacontrol=ctk.IntVar()
             entryporcentajegrasacontrol=ctk.CTkEntry(
-                self.new_patient,
+                table_frame,
                 font=self.small_text_font,
                 width=200, height=30,
                 textvariable=self.__porcentajegrasacontrol,
-            ).place(relx=0.42, rely=0.765,  anchor=ctk.NW)
+            )
+            entryporcentajegrasacontrol.grid(row=2, column=2, ipady=5, sticky=ctk.NW)
+            entryporcentajegrasacontrol.delete(0, ctk.END) 
                 
             #Ingresa el porcentaje de agua tomado en el control con el paciente
             self.__porcentajeaguacontrol=ctk.IntVar()
             entryporcentajeaguacontrol=ctk.CTkEntry(
-                self.new_patient,
+                table_frame,
                 font=self.small_text_font,
                 width=200, height=30,
                 textvariable=self.__porcentajeaguacontrol,
-            ).place(relx=0.58, rely=0.765,  anchor=ctk.NW)
+            )
+            entryporcentajeaguacontrol.grid(row=2, column=3, ipady=5, sticky=ctk.NW)
+            entryporcentajeaguacontrol.delete(0, ctk.END) 
+
+            #Agrega una lista desplegable 
+            self.__tipoReceta=ctk.IntVar()
+            entryTipoReceta=ctk.CTkComboBox(
+                table_frame,
+                width=200,
+                height=30,
+                font=self.small_text_font,
+                variable=self.__tipoReceta,
+                values=["Normal","Desintoxicación"],
+            )
+            entryTipoReceta.grid(row=2, column=4, ipady=5, sticky=ctk.NW)
+            entryTipoReceta.set("Normal")
         
             #Agrega un botón para buscar la receta apropiada para el paciente
             Recipe_lookup_button = ctk.CTkButton(
-                self.new_patient,
+                table_frame,
                 text="Buscar receta",
+                width=200, height=30,
                 font=self.small_text_font,
                 command="",
-            ).place(relx=0.805, rely=0.783, anchor=ctk.CENTER)
+            )
+            Recipe_lookup_button.grid(row=2, column=5, ipady=5, sticky=ctk.NW)
         
 
             row = 3  # Start from row 3 to avoid overlapping with previous entries
             for i in patient_register:
-                for j in range(1, 6):  # Assuming the data starts from index 1 in each entry
+                for j in range(1, 7):  # Assuming the data starts from index 1 in each entry
+
                     entry = ctk.CTkEntry(
                         table_frame,
                         width=200,
