@@ -22,7 +22,6 @@ class Dashboard:
         width: int = 2100,
         height: int = 720,
         appearance: str = "dark",
-        theme_color: str = "blue",
         userName: str = "",
     ) -> None:
         """Constructor for Dashboard class for Asclepius.
@@ -41,7 +40,6 @@ class Dashboard:
         self.user_id = userName
         self.db_object = BaseDeDatos("Dashboard")
         ctk.set_appearance_mode(appearance)
-        # ctk.set_default_color_theme(theme_color)
         ctk.set_default_color_theme("assets/SiluetaPalette.json")
 
         self.root = ctk.CTk()
@@ -57,7 +55,7 @@ class Dashboard:
             family="Rockwell", size=30, weight="bold", underline=True
         )
         self.title_font = ctk.CTkFont(
-            family="Rockwell", size=40, weight="bold"
+            family="Rockwell", size=35, weight="bold"
         )
         self.text_font = ctk.CTkFont(
             family="Rockwell", size=20, weight="normal"
@@ -69,7 +67,7 @@ class Dashboard:
             family="Rockwell", size=18, weight="normal"
         )
         self.tagline_font = ctk.CTkFont(
-            family="Rockwell", size=15, weight="normal"
+            family="Rockwell", size=15, weight="bold"
         )
         # ------------------------ Frames ------------------------#
         self.dashboard_frame = VentanaUsuario.Vista_Usuario(self,self.db_object)
@@ -100,7 +98,7 @@ class Dashboard:
         )
 
         title_label.pack(side=ctk.LEFT, padx=(20, 0))
-        tagline_label.place(relx=0.5, rely=0.4, anchor=ctk.CENTER, y=20)
+        tagline_label.place(relx=0.45, rely=0.4, anchor=ctk.CENTER, y=20)
         title_logo_label.pack(side=ctk.RIGHT, padx=(0, 20))
 
         title_frame.pack(side=ctk.TOP, fill=ctk.X, padx=(0, 20), pady=20)
@@ -243,7 +241,7 @@ class Dashboard:
         """Show the dashboard."""
 
         self.navigation_frame()
-        self.title_frame("Silueta...")
+        self.title_frame("Silueta")
         # self.show_dashboard_frame()
 
         center_window(self.root, self.width, self.height)
