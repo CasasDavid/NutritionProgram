@@ -2,12 +2,18 @@ import faulthandler
 
 faulthandler.enable()
 from ProgramaDeNutricion import Dashboard
+from ProgramaDeNutricion import VentanaPrincipal
+
+home_window = VentanaPrincipal.HomeScreen(
+    width=500, height=500, appearance_mode="dark"
+)
+home_window.show_homescreen()
+
 
 dash_board = Dashboard.Dashboard(
     width=1380,
     height=720,
     appearance="dark",
-    theme_color="blue",
     userName="Davidlcasas"
 )
 
